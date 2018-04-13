@@ -441,5 +441,25 @@ public class TestPersona extends TestCase
 	{
 		//TODO: falta implementar el caso de prueba
 	}
+	
+	public void testPersonaObtenerAbuelos()
+	{
+		//TODO: falta implementar el caso de prueba
+	}
+	
+	public void testPersonaObtenerAbuelas()
+	{
+		//TODO: falta implementar el caso de prueba
+	}
 		
+	public void testPersonaObtenerNietos()
+	{
+		//TODO: falta implementar el caso de prueba
+	}
+	
+	public void testPersonaObtenerNietas()
+	{
+		//TODO: falta implementar el caso de prueba
+	}
+	
 }
