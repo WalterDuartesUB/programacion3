@@ -1,6 +1,8 @@
 package ar.edu.ub.p3.persona.modelo;
 
+import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
+import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 
 public class Persona
 {
@@ -13,11 +15,11 @@ public class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	private Persona     padre;
-	private Persona     madre;
-	private Persona[]   hijos;
-	private Persona[]   hijas;
-	private Persona     pareja;
+	private Persona     padre = null;
+	private Persona     madre = null;
+	private Persona[]   hijos = new Persona[0];
+	private Persona[]   hijas = new Persona[0] ;
+	private Persona     pareja = null;
 	
 	private String      nombre;
 	private String      dni;
@@ -26,7 +28,7 @@ public class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	public Persona(Persona padre, Persona madre, String nombre, String dni, PersonaSexo sexo)
+	public Persona(Persona padre, Persona madre, String nombre, String dni, PersonaSexo sexo) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	{	
 		this( nombre, dni, sexo);
 		
@@ -40,17 +42,11 @@ public class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	public Persona(String nombre, String dni, PersonaSexo sexo)
+	public Persona(String nombre, String dni, PersonaSexo sexo) throws PersonaAtributoInvalidoException
 	{
 		setNombre(nombre);
 		setDni(dni);
-		setSexo(sexo);
-		
-		setHijos( new Persona[0] );
-		setHijas( new Persona[0] );
-		setPadre( null );
-		setMadre( null );
-		setPareja( null );
+		setSexo(sexo);	
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -105,16 +101,16 @@ public class Persona
 		parientesDestino = parientesDestino.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			if( !soyYo( pariente ) && !existePersonaEn( parientesDestino, pariente ) )
+			if( !soyYo( pariente ) && !pariente.existePersonaEn( parientesDestino ) )
 				parientesDestino = agregar( parientesDestino, pariente );
 		
 		return parientesDestino;
 	}	
 
-	private boolean existePersonaEn(Persona[] parientes, Persona unaPersona)
+	public boolean existePersonaEn(Persona[] parientes )
 	{
 		for( Persona pariente : parientes )
-			if( pariente.soyYo(unaPersona) )
+			if( pariente.soyYo( this ) )
 				return true;
 			
 		return false;
@@ -140,8 +136,11 @@ public class Persona
 		return padre;
 	}
 	
-	private void setPadre(Persona padre)
+	private void setPadre(Persona padre) throws FamiliarInvalidoException
 	{
+		if( padre == null )
+			throw new FamiliarInvalidoException("madre");
+		
 		this.padre = padre;
 	}
 	
@@ -153,8 +152,11 @@ public class Persona
 		return madre;
 	}
 	
-	private void setMadre(Persona madre)
+	private void setMadre(Persona madre) throws FamiliarInvalidoException
 	{
+		if( madre == null )
+			throw new FamiliarInvalidoException("madre");
+		
 		this.madre = madre;
 	}
 	
@@ -173,31 +175,52 @@ public class Persona
 		return nombre;
 	}
 	
-	private void setNombre(String nombre)
+	private void setNombre(String nombre) throws PersonaAtributoInvalidoException
 	{
+		if( !this.validarNombre( nombre ) )
+			throw new PersonaAtributoInvalidoException();
+			
 		this.nombre = nombre;
 	}
 	
+	private boolean validarNombre(String nombre) {
+		return !( nombre == null || nombre.trim().isEmpty() );
+	}
+
 	public String getDni()
 	{
 		return dni;
 	}
 	
-	private void setDni(String dni)
+	private void setDni(String dni) throws PersonaAtributoInvalidoException
 	{
+		if( !this.validarDni( dni ) )
+			throw new PersonaAtributoInvalidoException();
+		
 		this.dni = dni;
 	}
 	
+	private boolean validarDni(String dni) {
+		return !( dni == null || dni.trim().isEmpty() );
+	}
+
 	public PersonaSexo getSexo()
 	{
 		return sexo;
 	}
 	
-	private void setSexo(PersonaSexo sexo)
+	private void setSexo(PersonaSexo sexo) throws PersonaAtributoInvalidoException
 	{
+		if( !this.validarSexo( sexo ) )
+			throw new PersonaAtributoInvalidoException();
+		
 		this.sexo = sexo;
 	}
 	
+	private boolean validarSexo(PersonaSexo sexo) {
+		return sexo != null;
+	}
+
 	public Persona getPareja()
 	{
 		return pareja;
