@@ -6,6 +6,8 @@ import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 
 public class Persona
 {
+
+	//TODO: Refactorizar para tener un metodo agregarHijos / agregarHijas que agregue los Hijos/Hijas de una persona a un array de personas (Primos/Sobrinos)
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -291,6 +293,34 @@ public class Persona
 		return hermanas;
 	}
 	
+	public Persona[] getSobrinos()
+	{
+		Persona[] sobrinos = new Persona[0];
+		
+		for( Persona hermano : getHermanos() )
+			sobrinos = agregar( hermano.getHijos(), sobrinos);
+	
+		for( Persona hermana : getHermanas() )
+			sobrinos = agregar( hermana.getHijos(), sobrinos);
+		
+		return sobrinos;
+				
+	}
+	
+	public Persona[] getSobrinas()
+	{
+		Persona[] sobrinas = new Persona[0];
+		
+		for( Persona hermano : getHermanos() )
+			sobrinas = agregar( hermano.getHijas(), sobrinas);
+		
+		for( Persona hermana : getHermanas() )
+			sobrinas = agregar( hermana.getHijas(), sobrinas);
+		
+		return sobrinas;
+		
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
@@ -338,5 +368,35 @@ public class Persona
 		
 		return tias;
 	}
+
+	public Persona[] getPrimos()
+	{
+		Persona[] sobrinos = new Persona[0];
+		
+		for( Persona tio : getTios() )
+			sobrinos = agregar( tio.getHijos(), sobrinos);
 	
+		for( Persona tia : getTias() )
+			sobrinos = agregar( tia.getHijos(), sobrinos);
+		
+		return sobrinos;
+				
+	}
+	
+	public Persona[] getPrimas()
+	{
+		Persona[] sobrinas = new Persona[0];
+		
+		for( Persona tio : getTios() )
+			sobrinas = agregar( tio.getHijas(), sobrinas);
+		
+		for( Persona tia : getTias() )
+			sobrinas = agregar( tia.getHijas(), sobrinas);
+		
+		return sobrinas;
+		
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+	//	
 }
