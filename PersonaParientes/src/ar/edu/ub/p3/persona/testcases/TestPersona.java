@@ -424,42 +424,80 @@ public class TestPersona extends TestCase
 	
 	public void testPersonaObtenerPrimos()
 	{
-		//TODO: falta implementar el caso de prueba		
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerPrimas()
 	{
-		//TODO: falta implementar el caso de prueba		
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerSobrinos()
 	{
-		//TODO: falta implementar el caso de prueba		
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerSobrinas()
 	{
 		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerAbuelos()
 	{
 		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerAbuelas()
 	{
 		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 		
 	public void testPersonaObtenerNietos()
 	{
 		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 	public void testPersonaObtenerNietas()
 	{
 		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
+	}
+	
+	public void testPersonaObtenerCuniados()
+	{
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
+	}
+	
+	public void testPersonaObtenerCuniadas()
+	{
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
+	}
+	
+	public void testPersonaObtenerSuegros()
+	{
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
+	}
+	
+	public void testPersonaObtenerSuegras()
+	{
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
+	}
+	
+	public void testPersonaObtenerPareja()
+	{
+		//TODO: falta implementar el caso de prueba
+		assertTrue( false );
 	}
 	
 }
