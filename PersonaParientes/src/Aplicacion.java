@@ -10,7 +10,7 @@ public class Aplicacion
 	public static void main(String[] args) throws FamiliarNotFoundException
 	{
 		Persona padre = new Persona( "Padre", "123", PersonaSexo.MASCULINO );
-		Persona madre = new Persona( "Madre", "321", PersonaSexo.FEMENINO );
+		Persona madre = new Persona( "Madre", "321", PersonaSexo.FEMENINO ); 
 		
 //		Persona padreNuera = new Persona( "Padre N", "N 123", PersonaSexo.MASCULINO );
 //		Persona madreNuera = new Persona( "Madre N", "N 321", PersonaSexo.FEMENINO );		
