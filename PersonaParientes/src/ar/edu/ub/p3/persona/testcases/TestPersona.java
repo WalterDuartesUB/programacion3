@@ -260,7 +260,36 @@ public class TestPersona extends TestCase
 	
 	public void testPersonaObtenerHermanas()
 	{
+
+		Persona padre = new Persona( "Padre", "H1", PersonaSexo.MASCULINO );
+		Persona madre = new Persona( "Madre", "M1", PersonaSexo.FEMENINO );
 		
+		try 
+		{
+			Persona hija = new Persona( padre, madre, "hijo", "H1", PersonaSexo.FEMENINO );
+			Persona otroHija = new Persona( padre, madre, "hermano", "He1", PersonaSexo.FEMENINO );
+			
+			//Verifico ser hijo de mi padre
+			assertEquals( padre, hija.getPadre() );
+			assertEquals( madre, hija.getMadre() );
+
+			//Verifico que mi hermano tambien sea hijo de mis padres
+			assertEquals( padre, otroHija.getPadre() );
+			assertEquals( madre, otroHija.getMadre() );			
+
+			//Veo que el hermano de mi hermano sea yo
+			assertTrue( hija.existePersonaEn( otroHija.getHermanas() ) );
+			
+			//Veo que en mis hermanos figure mi hermano
+			assertTrue( otroHija.existePersonaEn( hija.getHermanas() ) );
+			
+		} catch (PersonaAtributoInvalidoException e) {
+			assertTrue( false );
+		} catch (FamiliarInvalidoException e) {
+			assertTrue( false );
+		} catch (FamiliarNotFoundException e) {
+			assertTrue( false );
+		}	
 	}		
 	
 	public void testPersonaObtenerTios()
