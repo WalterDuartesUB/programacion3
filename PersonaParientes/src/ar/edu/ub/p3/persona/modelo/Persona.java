@@ -109,6 +109,12 @@ public class Persona
 		return parientesDestino;
 	}
 	
+	private Persona[] agregarHijos(Persona[] parientesOrigen )
+	{
+		return agregarHijas(parientesOrigen, new Persona[0]);
+		
+	}
+	
 	private Persona[] agregarHijos(Persona[] parientesOrigen, Persona[] parientesDestino)
 	{
 		parientesDestino = parientesDestino.clone();
@@ -117,6 +123,11 @@ public class Persona
 			parientesDestino = agregar( pariente.getHijos(), parientesDestino);
 		
 		return parientesDestino;
+	}
+	
+	private Persona[] agregarHijas(Persona[] parientesOrigen )
+	{
+		return agregarHijas(parientesOrigen, new Persona[0]);
 	}
 	
 	private Persona[] agregarHijas(Persona[] parientesOrigen, Persona[] parientesDestino)
@@ -315,32 +326,12 @@ public class Persona
 	
 	public Persona[] getSobrinos()
 	{
-//		Persona[] sobrinos = agregarHijos( getHermanas(), agregarHijos( getHermanos(), new Persona[0] ) );
-		/*
-		for( Persona hermano : getHermanos() )
-			sobrinos = agregar( hermano.getHijos(), sobrinos);
-	
-		for( Persona hermana : getHermanas() )
-			sobrinos = agregar( hermana.getHijos(), sobrinos);
-		*/
-//		return sobrinos;
-		return agregarHijos( getHermanas(), agregarHijos( getHermanos(), new Persona[0] ) );
+		return agregarHijos( getHermanas(), agregarHijos( getHermanos() ) );
 	}
 	
 	public Persona[] getSobrinas()
 	{
-/*		
-		Persona[] sobrinas = new Persona[0];
-		
-		for( Persona hermano : getHermanos() )
-			sobrinas = agregar( hermano.getHijas(), sobrinas);
-		
-		for( Persona hermana : getHermanas() )
-			sobrinas = agregar( hermana.getHijas(), sobrinas);
-		
-		return sobrinas;
-*/		
-		return agregarHijas( getHermanas(), agregarHijas( getHermanos(), new Persona[0] ) );
+		return agregarHijas( getHermanas(), agregarHijas( getHermanos() ) );
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -348,6 +339,8 @@ public class Persona
 	
 	public Persona[] getTios()
 	{
+		//TODO refactorizar a agregarHermanos		
+		//TODO Las parejas de mis tias son mis tios		
 		Persona[] tios = new Persona[0];
 		try 
 		{
@@ -370,6 +363,9 @@ public class Persona
 	
 	public Persona[] getTias()
 	{
+		
+		//TODO refactorizar a agregarHermanas
+		//TODO Las parejas de mis tios son mis tias
 		Persona[] tias = new Persona[0];
 		
 		try 
@@ -393,34 +389,17 @@ public class Persona
 
 	public Persona[] getPrimos()
 	{
-/*		
-		Persona[] sobrinos = new Persona[0];
-		
-		for( Persona tio : getTios() )
-			sobrinos = agregar( tio.getHijos(), sobrinos);
-	
-		for( Persona tia : getTias() )
-			sobrinos = agregar( tia.getHijos(), sobrinos);
-		
-		return sobrinos;
-*/
-		return agregarHijos( getTias(), agregarHijos( getTios(), new Persona[0] ) );
+		return agregarHijos( agregarParejas( getTias() ), agregarHijos( agregarParejas( getTios() ) ) );
 	}
 	
+	private Persona[] agregarParejas(Persona[] parientes)
+	{
+		return parientes;
+	}
+
 	public Persona[] getPrimas()
 	{
-/*		
-		Persona[] sobrinas = new Persona[0];
-		
-		for( Persona tio : getTios() )
-			sobrinas = agregar( tio.getHijas(), sobrinas);
-		
-		for( Persona tia : getTias() )
-			sobrinas = agregar( tia.getHijas(), sobrinas);
-		
-		return sobrinas;
-*/
-		return agregarHijas( getTias(), agregarHijas( getTios(), new Persona[0] ) );
+		return agregarHijas( agregarParejas( getTias() ), agregarHijas( agregarParejas( getTios() ) ) );
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

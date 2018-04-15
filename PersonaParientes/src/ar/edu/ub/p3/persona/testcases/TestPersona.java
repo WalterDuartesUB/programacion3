@@ -318,15 +318,12 @@ public class TestPersona extends TestCase
 	{
 		Persona abuelo = new Persona( "Abuelo", "AM1", PersonaSexo.MASCULINO );
 		Persona abuela = new Persona( "Abuela", "AF1", PersonaSexo.FEMENINO );
-		
-		Persona otroAbuelo = new Persona( "Abuelo 2", "AM2", PersonaSexo.MASCULINO );
-		Persona otraAbuela = new Persona( "Abuela 2", "AF2", PersonaSexo.FEMENINO );
-					
+							
 		try 
 		{
 			
 			Persona padre = new Persona( abuelo, abuela, "Padre", "H1", PersonaSexo.MASCULINO );
-			Persona madre = new Persona( otroAbuelo, otraAbuela, "Madre", "M1", PersonaSexo.FEMENINO );
+			Persona madre = new Persona( "Madre", "M1", PersonaSexo.FEMENINO );
 			
 			Persona tio1 = new Persona( abuelo, abuela, "Tio 1", "T1", PersonaSexo.MASCULINO );
 			Persona tio2 = new Persona( abuelo, abuela, "Tio 2", "T2", PersonaSexo.MASCULINO );
@@ -350,15 +347,12 @@ public class TestPersona extends TestCase
 	{
 		Persona abuelo = new Persona( "Abuelo", "AM1", PersonaSexo.MASCULINO );
 		Persona abuela = new Persona( "Abuela", "AF1", PersonaSexo.FEMENINO );
-		
-		Persona otroAbuelo = new Persona( "Abuelo 2", "AM2", PersonaSexo.MASCULINO );
-		Persona otraAbuela = new Persona( "Abuela 2", "AF2", PersonaSexo.FEMENINO );
 					
 		try 
 		{
 			
 			Persona padre = new Persona( abuelo, abuela, "Padre", "H1", PersonaSexo.MASCULINO );
-			Persona madre = new Persona( otroAbuelo, otraAbuela, "Madre", "M1", PersonaSexo.FEMENINO );
+			Persona madre = new Persona( "Madre", "M1", PersonaSexo.FEMENINO );
 			
 			Persona tia1 = new Persona( abuelo, abuela, "tia 1", "T1", PersonaSexo.FEMENINO );
 			Persona tia2 = new Persona( abuelo, abuela, "tia 2", "T2", PersonaSexo.FEMENINO );
@@ -382,15 +376,12 @@ public class TestPersona extends TestCase
 	{
 		Persona abuelo = new Persona( "Abuelo", "AM1", PersonaSexo.MASCULINO );
 		Persona abuela = new Persona( "Abuela", "AF1", PersonaSexo.FEMENINO );
-		
-		Persona otroAbuelo = new Persona( "Abuelo 2", "AM2", PersonaSexo.MASCULINO );
-		Persona otraAbuela = new Persona( "Abuela 2", "AF2", PersonaSexo.FEMENINO );
 					
 		try 
 		{
 			
 			Persona padre = new Persona( abuelo, abuela, "Padre", "H1", PersonaSexo.MASCULINO );
-			Persona madre = new Persona( otroAbuelo, otraAbuela, "Madre", "M1", PersonaSexo.FEMENINO );
+			Persona madre = new Persona( "Madre", "M1", PersonaSexo.FEMENINO );
 			
 			Persona tio1 = new Persona( abuelo, abuela, "Tio 1", "T1", PersonaSexo.MASCULINO );
 			Persona tio2 = new Persona( abuelo, abuela, "Tio 2", "T2", PersonaSexo.MASCULINO );
@@ -424,8 +415,43 @@ public class TestPersona extends TestCase
 	
 	public void testPersonaObtenerPrimos()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona abuelo = new Persona( "Abuelo", "AM1", PersonaSexo.MASCULINO );
+		Persona abuela = new Persona( "Abuela", "AF1", PersonaSexo.FEMENINO );
+							
+		try 
+		{
+			
+			Persona padre = new Persona( abuelo, abuela, "Padre", "H1", PersonaSexo.MASCULINO );
+			Persona madre = new Persona( "Madre", "M1", PersonaSexo.FEMENINO );
+			
+			Persona tio1 = new Persona( abuelo, abuela, "Tio 1", "T1", PersonaSexo.MASCULINO );
+			Persona tia1 = new Persona( "tia 1", "TF1", PersonaSexo.FEMENINO );
+			Persona tia2 = new Persona( "tia politica 2", "TPF1", PersonaSexo.FEMENINO );
+			
+			Persona tio2 = new Persona( abuelo, abuela, "Tio 2", "T2", PersonaSexo.MASCULINO );					
+			
+			Persona hijo = new Persona( padre, madre, "hijo", "H1", PersonaSexo.MASCULINO );
+			
+			Persona primo1 = new Persona( tio1, tia1, "primo 1 tio 1", "P1T1", PersonaSexo.MASCULINO );
+			Persona primo2 = new Persona( tio1, tia1, "prima 2 tio 1", "P2T1", PersonaSexo.FEMENINO );
+			Persona primo3 = new Persona( tio1, tia1, "primo 3 tio 1", "P3T1", PersonaSexo.MASCULINO );
+			
+			Persona primo4 = new Persona( tio2, tia2, "primo 1 tio 2", "P1T1", PersonaSexo.MASCULINO );
+			Persona primo5 = new Persona( tio2, tia2, "prima 2 tio 2", "P2T1", PersonaSexo.FEMENINO );
+						
+			//Veo que mis primos existan en donde corresponde
+			assertTrue( primo1.existePersonaEn( hijo.getPrimos() ) );
+			assertTrue( primo3.existePersonaEn( hijo.getPrimos() ) );
+			assertTrue( primo4.existePersonaEn( hijo.getPrimos() ) );
+			
+			assertFalse( primo2.existePersonaEn( hijo.getPrimos() ) );
+			assertFalse( primo5.existePersonaEn( hijo.getPrimos() ) );
+						
+		} catch (PersonaAtributoInvalidoException e) {
+			assertTrue( false );
+		} catch (FamiliarInvalidoException e) {
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerPrimas()
