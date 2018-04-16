@@ -99,15 +99,15 @@ public class Persona
 		return nuevosHijos;
 	}
 	
-	private Persona[] agregar(Persona[] parientesOrigen, Persona[] parientesDestino)
+	private Persona[] agregar(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesDestino = parientesDestino.clone();
+		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			if( !soyYo( pariente ) && !pariente.existePersonaEn( parientesDestino ) )
-				parientesDestino = agregar( parientesDestino, pariente );
+			if( !soyYo( pariente ) && !pariente.existePersonaEn( parientesExistentes ) )
+				parientesExistentes = agregar( parientesExistentes, pariente );
 		
-		return parientesDestino;
+		return parientesExistentes;
 	}
 	
 	private Persona[] agregarHijos(Persona[] parientesOrigen )
@@ -116,14 +116,14 @@ public class Persona
 		
 	}
 	
-	private Persona[] agregarHijos(Persona[] parientesOrigen, Persona[] parientesDestino)
+	private Persona[] agregarHijos(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesDestino = parientesDestino.clone();
+		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			parientesDestino = agregar( pariente.getHijos(), parientesDestino);
+			parientesExistentes = agregar( pariente.getHijos(), parientesExistentes);
 		
-		return parientesDestino;
+		return parientesExistentes;
 	}
 	
 	private Persona[] agregarHijas(Persona[] parientesOrigen )
@@ -131,14 +131,14 @@ public class Persona
 		return agregarHijas(parientesOrigen, new Persona[0]);
 	}
 	
-	private Persona[] agregarHijas(Persona[] parientesOrigen, Persona[] parientesDestino)
+	private Persona[] agregarHijas(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesDestino = parientesDestino.clone();
+		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			parientesDestino = agregar( pariente.getHijas(), parientesDestino);
+			parientesExistentes = agregar( pariente.getHijas(), parientesExistentes);
 		
-		return parientesDestino;
+		return parientesExistentes;
 	}
 		
 	public boolean existePersonaEn(Persona[] parientes )
@@ -173,7 +173,7 @@ public class Persona
 	private void setPadre(Persona padre) throws FamiliarInvalidoException
 	{
 		if( padre == null )
-			throw new FamiliarInvalidoException("madre");
+			throw new FamiliarInvalidoException("padre");
 		
 		this.padre = padre;
 	}
@@ -261,20 +261,33 @@ public class Persona
 	}
 	
 	public void setPareja(Persona pareja) throws ParejaInvalidaException
-	{
-		if( !this.validarPareja( pareja ) )
-			throw new ParejaInvalidaException();
-		
+	{		
 		Persona.emparejar( this, pareja );
 	}
 
 	private boolean validarPareja(Persona pareja)
-	{
-		return pareja != null && !this.soyYo( pareja ) && this.getSexo() != pareja.getSexo();
+	{		
+		return pareja != null && !this.soyYo( pareja ) && !this.soyFamiliarDe( pareja );
 	}
 
-	private static void emparejar(Persona persona, Persona pareja)
+	private boolean soyFamiliarDe(Persona persona) 
 	{
+	
+		Persona[] parientes = new Persona[0];
+		
+	
+		
+		return this.existePersonaEn(parientes);
+	}
+
+	private static void emparejar(Persona persona, Persona pareja) throws ParejaInvalidaException
+	{
+		if( pareja == null || persona == null )
+			throw new ParejaInvalidaException();
+		
+		if( !persona.validarPareja( pareja ) )
+			throw new ParejaInvalidaException();
+		
 		persona.pareja = pareja;
 		pareja.pareja = persona;		
 	}
@@ -386,19 +399,19 @@ public class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 
-	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesDestino)
+	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesDestino = parientesDestino.clone();
+		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			parientesDestino = agregar( pariente.getHermanas(), parientesDestino);
+			parientesExistentes = agregar( pariente.getHermanas(), parientesExistentes);
 		
-		return parientesDestino;
+		return parientesExistentes;
 	}
 
-	private Persona[] agregarHermanas(Persona persona, Persona[] parientesDestino)
+	private Persona[] agregarHermanas(Persona persona, Persona[] parientesExistentes)
 	{
-		return agregarHermanas( new Persona[] { persona }, parientesDestino );
+		return agregarHermanas( new Persona[] { persona }, parientesExistentes );
 	}
 	
 	private Persona[] agregarHermanas(Persona persona)
@@ -406,19 +419,19 @@ public class Persona
 		return agregarHermanas( new Persona[] { persona }, new Persona[0]);
 	}
 	
-	private Persona[] agregarHermanos(Persona[] parientesOrigen, Persona[] parientesDestino)
+	private Persona[] agregarHermanos(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesDestino = parientesDestino.clone();
+		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
-			parientesDestino = agregar( pariente.getHermanos(), parientesDestino);
+			parientesExistentes = agregar( pariente.getHermanos(), parientesExistentes);
 		
-		return parientesDestino;
+		return parientesExistentes;
 	}
 
-	private Persona[] agregarHermanos(Persona persona, Persona[] parientesDestino)
+	private Persona[] agregarHermanos(Persona persona, Persona[] parientesExistentes)
 	{
-		return agregarHermanos( new Persona[] { persona }, parientesDestino );
+		return agregarHermanos( new Persona[] { persona }, parientesExistentes );
 	}
 	
 	private Persona[] agregarHermanos(Persona persona)
