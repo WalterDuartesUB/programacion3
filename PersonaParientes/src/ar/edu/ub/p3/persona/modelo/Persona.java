@@ -431,7 +431,13 @@ public class Persona
 	
 	private Persona[] agregarParejas(Persona[] parientes)
 	{
-		return parientes;
+		Persona[] parejas = agregar( parientes, new Persona[0] );
+		
+		for( Persona persona : parientes )
+			if( persona.getPareja() != null )
+				parejas = agregar( parejas, persona.getPareja() );
+		
+		return parejas;
 	}
 	
 	private Persona[] agregarParejas(Persona persona)
