@@ -13,6 +13,8 @@ public class Teletipo
 	private String caracterReset;
 	private String caracterFinMensaje;
 
+	private String mensaje;
+	
 	/////////////////////////////////////////////////////////////////////
 	//
 	
@@ -36,8 +38,8 @@ public class Teletipo
 	
 	public String interpretar(String mensajeAInterpretar)
 	{
-		String  mensaje = "";
-		Pila	pila = new Pila();   
+		
+		Pila pila = new Pila();
 		
 		///////////////////////////////////////////////////////////////////////
 		//Recorro el input y opero con la pila segun corresponda
@@ -56,18 +58,34 @@ public class Teletipo
 		}
 		
 		///////////////////////////////////////////////////////////////////////
-		// Armo el mensaje para mostrar
+		// Extraigo el mensaje de la pila
+		
+		this.setMensaje( getMensaje( pila ) );
+		
+		//
+		
+		return this.getMensaje();
+	}
+
+	///////////////////////////////////////////////////////////////////
+	//
+	
+	private String getMensaje(Pila pila)
+	{
+		String msg = "";
 		
 		while( !pila.isVacia() )
 		{			
-			mensaje = pila.ver() + mensaje;
+			msg = pila.ver() + msg;
 			pila.sacar();
-		}
-				
-		///////////////////////////////////////////////////////////////////////
-		//
+		}		
 		
-		return mensaje;
+		return msg;
+	}
+
+	private String getMensaje()
+	{
+		return this.mensaje;
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -160,6 +178,14 @@ public class Teletipo
 	private void setCaracterFinMensaje(String caracterFinMensaje)
 	{
 		this.caracterFinMensaje = caracterFinMensaje;
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	//	
+
+	private void setMensaje(String mensaje)
+	{
+		this.mensaje = mensaje;
 	}
 
 }
