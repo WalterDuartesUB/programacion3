@@ -5,7 +5,7 @@ import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
 import ar.edu.ub.p3.persona.excepciones.ParejaInvalidaException;
 import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 
-public class Persona
+public abstract class Persona
 {
 
 	/////////////////////////////////////////////////////////////////////////
@@ -16,6 +16,8 @@ public class Persona
 		
 		public Persona[] agregarParientes( Persona[] parientesOrigen, Persona[] parientesExistentes )
 		{
+//			parientesExistentes = parientesExistentes.clone();
+			
 			for( Persona pariente : parientesOrigen )
 				parientesExistentes = agregar( this.getParientes( pariente ), parientesExistentes);
 			
@@ -73,7 +75,7 @@ public class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	public enum PersonaSexo{MASCULINO, FEMENINO};
+//	public enum PersonaSexo{MASCULINO, FEMENINO};
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -86,30 +88,34 @@ public class Persona
 	
 	private String      nombre;
 	private String      dni;
-	private PersonaSexo sexo;
+//	private PersonaSexo sexo;
 
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	public Persona(Persona padre, Persona madre, String nombre, String dni, PersonaSexo sexo) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
+//	public Persona(Persona padre, Persona madre, String nombre, String dni, PersonaSexo sexo) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
+	public Persona(Persona padre, Persona madre, String nombre, String dni ) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	{	
-		this( nombre, dni, sexo);
-		
+//		this( nombre, dni, sexo);
+		this( nombre, dni );
+				
 		setPadre(padre);
 		setMadre(madre);
 		
-		padre.agregarHijo( this );
-		madre.agregarHijo( this );
+//		padre.agregarHijo( this );
+//		madre.agregarHijo( this );
+		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	public Persona(String nombre, String dni, PersonaSexo sexo) throws PersonaAtributoInvalidoException
+	public Persona(String nombre, String dni ) throws PersonaAtributoInvalidoException
+//	public Persona(String nombre, String dni, PersonaSexo sexo) throws PersonaAtributoInvalidoException
 	{
 		setNombre(nombre);
 		setDni(dni);
-		setSexo(sexo);		
+//		setSexo(sexo);		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -126,12 +132,13 @@ public class Persona
 	@Override
 	public String toString()
 	{	
-		return getDni() + " " + getNombre() + " " + getSexo().toString(); 
+//		return getDni() + " " + getNombre() + " " + getSexo().toString(); 
+		return getDni() + " " + getNombre(); 
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
-		
+/*		
 	private void agregarHijo(Persona persona)
 	{
 		if( persona.esMasculino() )
@@ -145,6 +152,7 @@ public class Persona
 	{
 		return getSexo() == PersonaSexo.MASCULINO;
 	}
+*/
 	
 	private Persona[] agregar(Persona[] hijos, Persona persona)
 	{
@@ -220,7 +228,7 @@ public class Persona
 		return padre;
 	}
 	
-	private void setPadre(Persona padre) throws FamiliarInvalidoException
+	protected void setPadre(Persona padre) throws FamiliarInvalidoException
 	{
 		if( padre == null )
 			throw new FamiliarInvalidoException("padre");
@@ -230,13 +238,13 @@ public class Persona
 	
 	public Persona getMadre() throws FamiliarNotFoundException
 	{
-		if( padre == null )
+		if( madre == null )
 			throw new FamiliarNotFoundException( String.format("La persona %s no tiene madre.", this));
 		
 		return madre;
 	}
 	
-	private void setMadre(Persona madre) throws FamiliarInvalidoException
+	protected void setMadre(Persona madre) throws FamiliarInvalidoException
 	{
 		if( madre == null )
 			throw new FamiliarInvalidoException("madre");
@@ -287,7 +295,7 @@ public class Persona
 	private boolean validarDni(String dni) {
 		return !( dni == null || dni.trim().isEmpty() );
 	}
-
+/*
 	public PersonaSexo getSexo()
 	{
 		return sexo;
@@ -304,7 +312,7 @@ public class Persona
 	private boolean validarSexo(PersonaSexo sexo) {
 		return sexo != null;
 	}
-
+*/
 	public Persona getPareja()
 	{
 		return pareja;
@@ -359,7 +367,7 @@ public class Persona
 		
 		try
 		{
-			hermanos =  agregarHijos( agregarParejas( getMadre() ), agregarHijos( agregarParejas( getPadre() ) ) );
+			hermanos =  agregarHijos( agregarParejas( getMadre() ), agregarHijos( agregarParejas( getPadre() ) ) );			
 		}
 		catch (FamiliarNotFoundException e)
 		{
@@ -493,7 +501,7 @@ public class Persona
 	
 	private Persona[] agregarParejas(Persona persona)
 	{
-		return agregarParejas( new Persona[] { persona } );
+		return agregarParejas( new Persona[] { persona } );		
 	}	
 	
 	private Persona[] obtenerParejas(Persona[] personas)
@@ -505,6 +513,14 @@ public class Persona
 				parejas = agregar( parejas, persona.getPareja() );
 		
 		return parejas;
+	}
+
+	protected void agregarHijo(Hombre hombre) {
+		setHijos( agregar( getHijos(), hombre ) );		
+	}
+	
+	protected void agregarHijo(Mujer hombre) {
+		setHijas( agregar( getHijas(), hombre ) );		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

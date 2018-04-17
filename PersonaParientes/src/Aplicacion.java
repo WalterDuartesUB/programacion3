@@ -2,7 +2,6 @@ import java.util.Arrays;
 
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
 import ar.edu.ub.p3.persona.modelo.Persona;
-import ar.edu.ub.p3.persona.modelo.Persona.PersonaSexo;
 
 public class Aplicacion
 {
