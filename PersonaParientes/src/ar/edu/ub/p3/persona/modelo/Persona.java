@@ -8,7 +8,67 @@ import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 public class Persona
 {
 
-	//TODO: Refactorizar para tener un metodo agregarHijos / agregarHijas que agregue los Hijos/Hijas de una persona a un array de personas (Primos/Sobrinos)
+	/////////////////////////////////////////////////////////////////////////
+	//
+	
+	abstract class PersonaAgregar{
+		public abstract Persona[] getParientes(Persona persona);
+		
+		public Persona[] agregarParientes( Persona[] parientesOrigen, Persona[] parientesExistentes )
+		{
+			for( Persona pariente : parientesOrigen )
+				parientesExistentes = agregar( this.getParientes( pariente ), parientesExistentes);
+			
+			return parientesExistentes;
+		}
+	}
+	
+	/////////////////////////////////////////////////////////////////////////
+	//
+	
+	class PersonaAgregarHijos extends PersonaAgregar{
+
+		@Override
+		public Persona[] getParientes(Persona persona) {
+			return persona.getHijos();
+		}
+		
+	}
+	
+	class PersonaAgregarHijas extends PersonaAgregar{
+
+		@Override
+		public Persona[] getParientes(Persona persona) {
+			return persona.getHijas();
+		}
+		
+	}	
+	
+	/////////////////////////////////////////////////////////////////////////
+	//
+	
+	class PersonaAgregarHermanos extends PersonaAgregar{
+		
+		@Override
+		public Persona[] getParientes(Persona persona) {
+			return persona.getHermanos();
+		}
+		
+	}
+	
+	class PersonaAgregarHermanas extends PersonaAgregar{
+		
+		@Override
+		public Persona[] getParientes(Persona persona) {
+			return persona.getHermanas();
+		}
+		
+	}	
+	
+	/////////////////////////////////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////////////////////////////////
+	
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -101,7 +161,7 @@ public class Persona
 	
 	private Persona[] agregar(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesExistentes = parientesExistentes.clone();
+//		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
 			if( !soyYo( pariente ) && !pariente.existePersonaEn( parientesExistentes ) )
@@ -118,12 +178,12 @@ public class Persona
 	
 	private Persona[] agregarHijos(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesExistentes = parientesExistentes.clone();
-		
-		for( Persona pariente : parientesOrigen )
-			parientesExistentes = agregar( pariente.getHijos(), parientesExistentes);
-		
-		return parientesExistentes;
+		return new PersonaAgregarHijos().agregarParientes( parientesOrigen, parientesExistentes );
+	}
+	
+	private Persona[] agregarHijas(Persona[] parientesOrigen, Persona[] parientesExistentes)
+	{			
+		return new PersonaAgregarHijas().agregarParientes( parientesOrigen, parientesExistentes );
 	}
 	
 	private Persona[] agregarHijas(Persona[] parientesOrigen )
@@ -131,16 +191,6 @@ public class Persona
 		return agregarHijas(parientesOrigen, new Persona[0]);
 	}
 	
-	private Persona[] agregarHijas(Persona[] parientesOrigen, Persona[] parientesExistentes)
-	{
-		parientesExistentes = parientesExistentes.clone();
-		
-		for( Persona pariente : parientesOrigen )
-			parientesExistentes = agregar( pariente.getHijas(), parientesExistentes);
-		
-		return parientesExistentes;
-	}
-		
 	public boolean existePersonaEn(Persona[] parientes )
 	{
 		for( Persona pariente : parientes )
@@ -273,9 +323,7 @@ public class Persona
 	private boolean soyFamiliarDe(Persona persona) 
 	{
 	
-		Persona[] parientes = new Persona[0];
-		
-	
+		Persona[] parientes = new Persona[0];		
 		
 		return this.existePersonaEn(parientes);
 	}
@@ -401,12 +449,7 @@ public class Persona
 
 	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesExistentes = parientesExistentes.clone();
-		
-		for( Persona pariente : parientesOrigen )
-			parientesExistentes = agregar( pariente.getHermanas(), parientesExistentes);
-		
-		return parientesExistentes;
+		return new PersonaAgregarHermanas().agregarParientes(parientesOrigen, parientesExistentes);
 	}
 
 	private Persona[] agregarHermanas(Persona persona, Persona[] parientesExistentes)
@@ -421,12 +464,7 @@ public class Persona
 	
 	private Persona[] agregarHermanos(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-		parientesExistentes = parientesExistentes.clone();
-		
-		for( Persona pariente : parientesOrigen )
-			parientesExistentes = agregar( pariente.getHermanos(), parientesExistentes);
-		
-		return parientesExistentes;
+		return new PersonaAgregarHermanos().agregarParientes(parientesOrigen, parientesExistentes);
 	}
 
 	private Persona[] agregarHermanos(Persona persona, Persona[] parientesExistentes)

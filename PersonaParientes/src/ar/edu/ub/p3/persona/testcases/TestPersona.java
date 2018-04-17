@@ -494,7 +494,7 @@ public class TestPersona extends TestCase
 			assertTrue( false );
 		}
 	}
-	
+
 	public void testPersonaObtenerSobrinos()
 	{
 		//TODO: falta implementar el caso de prueba
