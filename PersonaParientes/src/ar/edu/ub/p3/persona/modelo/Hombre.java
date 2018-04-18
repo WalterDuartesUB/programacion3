@@ -12,7 +12,7 @@ public class Hombre extends Persona {
 	public Hombre(String nombre, String dni ) throws PersonaAtributoInvalidoException {
 		super(nombre, dni );
 	}
-	
+/*	
 	@Override
 	protected void setPadre( Persona padre ) throws FamiliarInvalidoException
 	{
@@ -28,4 +28,16 @@ public class Hombre extends Persona {
 		
 		madre.agregarHijo( this );
 	}
+	*/
+
+	@Override
+	protected void agregateComoHijoEn(Persona pariente) {
+		pariente.agregarHijo( this );		
+	}
+/*
+	@Override
+	protected void agregarComoMadre(Persona madre) {
+		madre.agregarHijo( this );		
+	}
+*/
 }

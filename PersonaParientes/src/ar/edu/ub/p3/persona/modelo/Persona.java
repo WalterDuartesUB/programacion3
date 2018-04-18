@@ -106,12 +106,6 @@ public abstract class Persona
 	//
 	/////////////////////////////////////////////////////////////////////////
 	
-	
-	///////////////////////////////////////////////////////////////////////////
-	//
-	
-//	public enum PersonaSexo{MASCULINO, FEMENINO};
-	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
@@ -123,22 +117,16 @@ public abstract class Persona
 	
 	private String      nombre;
 	private String      dni;
-//	private PersonaSexo sexo;
 
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-//	public Persona(Persona padre, Persona madre, String nombre, String dni, PersonaSexo sexo) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	public Persona(Persona padre, Persona madre, String nombre, String dni ) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	{	
-//		this( nombre, dni, sexo);
 		this( nombre, dni );
 				
 		setPadre(padre);
 		setMadre(madre);
-		
-//		padre.agregarHijo( this );
-//		madre.agregarHijo( this );
 		
 	}
 	
@@ -146,11 +134,9 @@ public abstract class Persona
 	//
 	
 	public Persona(String nombre, String dni ) throws PersonaAtributoInvalidoException
-//	public Persona(String nombre, String dni, PersonaSexo sexo) throws PersonaAtributoInvalidoException
 	{
 		setNombre(nombre);
 		setDni(dni);
-//		setSexo(sexo);		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -166,28 +152,12 @@ public abstract class Persona
 	
 	@Override
 	public String toString()
-	{	
-//		return getDni() + " " + getNombre() + " " + getSexo().toString(); 
+	{	 
 		return getDni() + " " + getNombre(); 
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
-/*		
-	private void agregarHijo(Persona persona)
-	{
-		if( persona.esMasculino() )
-			setHijos( agregar( getHijos(), persona ) );		
-		else
-			setHijas( agregar( getHijas(), persona ) );
-		
-	}
-
-	private boolean esMasculino()
-	{
-		return getSexo() == PersonaSexo.MASCULINO;
-	}
-*/
 	
 	private Persona[] agregar(Persona[] hijos, Persona persona)
 	{
@@ -214,7 +184,6 @@ public abstract class Persona
 	
 	private Persona[] agregar(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
-//		parientesExistentes = parientesExistentes.clone();
 		
 		for( Persona pariente : parientesOrigen )
 			if( !soyYo( pariente ) && !pariente.existePersonaEn( parientesExistentes ) )
@@ -298,14 +267,16 @@ public abstract class Persona
 		return padre;
 	}
 	
-	protected void setPadre(Persona padre) throws FamiliarInvalidoException
+	private void setPadre(Persona padre) throws FamiliarInvalidoException
 	{
 		if( padre == null )
 			throw new FamiliarInvalidoException("padre");
 		
 		this.padre = padre;
+		
+		this.agregateComoHijoEn( padre );
 	}
-	
+
 	public Persona getMadre() throws FamiliarNotFoundException
 	{
 		if( madre == null )
@@ -314,13 +285,17 @@ public abstract class Persona
 		return madre;
 	}
 	
-	protected void setMadre(Persona madre) throws FamiliarInvalidoException
+	private void setMadre(Persona madre) throws FamiliarInvalidoException
 	{
 		if( madre == null )
 			throw new FamiliarInvalidoException("madre");
 		
 		this.madre = madre;
+		
+		this.agregateComoHijoEn( madre );
 	}
+	
+	protected abstract void agregateComoHijoEn(Persona pariente);
 	
 	public Persona[] getHijos()
 	{
