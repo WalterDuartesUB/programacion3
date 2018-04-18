@@ -770,14 +770,74 @@ public class TestPersona extends TestCase
 	
 	public void testPersonaObtenerCuniados()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona suegro = new Hombre( "Suegro", "s1" );
+		Persona suegra = new Mujer( "Suegra", "s2" );
+		
+		Persona persona = new Hombre( "Persona", "p1" );
+		try 
+		{
+			Persona pareja = new Mujer( suegro, suegra, "Pareja", "p2" );
+			Persona cuniado = new Hombre( suegro, suegra, "Cuniado", "c1" );
+			Persona cuniado2 = new Hombre( suegro, suegra, "Cuniado 2", "c2" );
+			Persona cuniada = new Mujer( suegro, suegra, "Cuniada", "c3" );
+		
+			persona.setPareja( pareja );
+			
+			assertEquals( persona, pareja.getPareja() );
+			assertEquals( pareja, persona.getPareja() );
+			
+			assertTrue( cuniado.existePersonaEn( persona.getCuniados() ) );
+			assertTrue( cuniado2.existePersonaEn( persona.getCuniados() ) );
+			assertFalse( cuniada.existePersonaEn( persona.getCuniados() ) );
+						
+			assertTrue( persona.getCuniados().length == 2 );
+			assertTrue( suegro.getCuniados().length == 0 );
+			assertTrue( suegra.getCuniados().length == 0 );
+			assertTrue( pareja.getCuniados().length == 0 );
+			assertTrue( cuniado.getCuniados().length == 0 );
+			assertTrue( cuniado2.getCuniados().length == 0 );
+			assertTrue( cuniada.getCuniados().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException  | ParejaInvalidaException e) 
+		{		
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerCuniadas()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona suegro = new Hombre( "Suegro", "s1" );
+		Persona suegra = new Mujer( "Suegra", "s2" );
+		
+		Persona persona = new Hombre( "Persona", "p1" );
+		try 
+		{
+			Persona pareja = new Mujer( suegro, suegra, "Pareja", "p2" );
+			Persona cuniado = new Hombre( suegro, suegra, "Cuniado", "c1" );
+			Persona cuniado2 = new Hombre( suegro, suegra, "Cuniado 2", "c2" );
+			Persona cuniada = new Mujer( suegro, suegra, "Cuniada", "c3" );
+		
+			persona.setPareja( pareja );
+			
+			assertEquals( persona, pareja.getPareja() );
+			assertEquals( pareja, persona.getPareja() );
+			
+			assertFalse( cuniado.existePersonaEn( persona.getCuniadas() ) );
+			assertFalse( cuniado2.existePersonaEn( persona.getCuniadas() ) );
+			assertTrue( cuniada.existePersonaEn( persona.getCuniadas() ) );
+						
+			assertTrue( persona.getCuniadas().length == 1 );
+			assertTrue( suegro.getCuniadas().length == 0 );
+			assertTrue( suegra.getCuniadas().length == 0 );
+			assertTrue( pareja.getCuniadas().length == 0 );
+			assertTrue( cuniado.getCuniadas().length == 0 );
+			assertTrue( cuniado2.getCuniadas().length == 0 );
+			assertTrue( cuniada.getCuniadas().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException  | ParejaInvalidaException e) 
+		{		
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerSuegros() 
