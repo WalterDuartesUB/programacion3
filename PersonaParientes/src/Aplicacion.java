@@ -15,26 +15,32 @@ public class Aplicacion
 	{
 		Persona abuelo = new Hombre( "abuelo", "a1");
 		Persona abuela = new Mujer( "abuela", "a2");
+		
+		Persona otroAbuelo = new Hombre( "abuelo2", "a11");
+		Persona otraAbuela = new Mujer( "abuela2 ", "a21");		
 				
 		Persona tio = new Hombre( abuelo, abuela, "tio", "t1");
 		Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
 	
-		Persona madre = new Mujer( "madre", "m1");
-		Persona madre2 = new Mujer( "madre", "m2");
+		Persona madre = new Mujer( otroAbuelo, otraAbuela, "madre", "m1");
+		Persona amante = new Mujer( "amante", "m2");
 		
 		Persona hijo = new Hombre( padre, madre, "nieto 1", "n1");
+		Persona hijoExtraMatrimonial = new Hombre( padre, amante, "nieto 2", "n2");
 
+		System.out.println( hijo.getFamilia() );
+		System.out.println( madre.getFamilia() );
+		System.out.println( padre.getFamilia() );		
+		System.out.println( tio.getFamilia() );
+		System.out.println( abuelo.getFamilia() );
+		System.out.println( abuela.getFamilia() );
 		
-//		madre.setPareja( hijo );
-//		madre.setPareja( tio );
-		madre.setPareja( padre );
-		madre2.setPareja( madre );
-//		madre.setPareja( abuelo );
-		//madre.setPareja( abuela );
-	
-		System.out.println( padre.getPareja() );
-		System.out.println( madre.getPareja() );
-		System.out.println( madre2.getPareja() );
+		System.out.println();
+		
+		System.out.println( amante.getFamilia() );
+		
+		
+		madre.setPareja( amante );
 	}
 
 }

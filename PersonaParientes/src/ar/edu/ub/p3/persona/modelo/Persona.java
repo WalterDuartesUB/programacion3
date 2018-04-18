@@ -119,30 +119,34 @@ public abstract class Persona
 		
 		public Familia( Persona persona )
 		{
-			agregarFamiliar( persona );
+			agregar( persona );
 		}
-
+/*
 		public void agregarFamiliar(Persona persona) 
 		{
 			setFamiliares( agregar( new Persona[] { persona } , getFamiliares()) );			
 		}
 
-		public boolean existeFamiliaEn(Familia[] familias) {
+		public boolean existeFamiliaEn(Familia[] familias) 
+		{
 			for( Familia flia : familias )
 				if( soyYo( flia ) )
 					return true;
 			return false;
 		}
 
-		private boolean soyYo(Familia flia) {
+		private boolean soyYo(Familia flia) 
+		{
 			return this == flia;
 		}
-
-		private Persona[] getFamiliares() {
+*/
+		private Persona[] getFamiliares() 
+		{
 			return familiares;
 		}
 
-		private void setFamiliares(Persona[] familiares) {
+		private void setFamiliares(Persona[] familiares) 
+		{
 			this.familiares = familiares;
 		}
 		
@@ -150,6 +154,24 @@ public abstract class Persona
 		public String toString() 
 		{
 			return Arrays.toString( this.getFamiliares() );
+		}
+
+		public void agregar(Familia familia) 
+		{
+			for( Persona persona : familia.getFamiliares() )
+				agregar( persona );			
+		}
+
+		public void agregar(Persona persona) 
+		{
+			setFamiliares( persona.agregar( getFamiliares(), persona ) );
+		}
+		
+		public void limpiar() {
+			for( int posicion = 0; posicion < this.getFamiliares().length; posicion++)
+				this.getFamiliares()[posicion] = null;
+			
+			this.setFamiliares( new Persona[0]);
 		}
 	}
 	
@@ -160,7 +182,8 @@ public abstract class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
-	private Familia[]   familias = new Familia[0];
+//	private Familia[]   familias = new Familia[0];
+	private Familia		familia = null;
 	
 	private Persona     padre = null;
 	private Persona     madre = null;
@@ -176,11 +199,27 @@ public abstract class Persona
 	
 	public Persona(Persona padre, Persona madre, String nombre, String dni ) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	{	
-		this( nombre, dni );
-				
+		this( nombre, dni, false );
+					
+		//Mi familia es la de mi padre
+		setFamilia( padre.getFamilia() );
+		
+		//A mi familia, agrego los familiares de la familia de mi madre
+		this.getFamilia().agregar( madre.getFamilia() );
+		
+		//A mi familia, me agrego yo
+		this.getFamilia().agregar( this );
+		
+		//A mi madre, le digo que su familia es mi familia
+		madre.setFamilia( this.getFamilia() );
+		
+		///////////////////////////////////////////////////////////////////////
+		//Asigno mi padre y mi madre
+		
 		setPadre(padre);
 		setMadre(madre);
 		
+/*		
 		//Reorganizo las familias		
 		agregarFamilias( padre.getFamilias() );
 		agregarFamilias( madre.getFamilias() );
@@ -190,7 +229,7 @@ public abstract class Persona
 		
 		padre.agregarFamilias( madre.getFamilias() );
 		madre.agregarFamilias( padre.getFamilias() );
-	
+*/	
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -198,12 +237,48 @@ public abstract class Persona
 	
 	public Persona(String nombre, String dni ) throws PersonaAtributoInvalidoException
 	{
+		this( nombre, dni, true );
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
+	private Persona(String nombre, String dni, boolean debeCrearFamilia ) throws PersonaAtributoInvalidoException
+	{
 		setNombre(nombre);
 		setDni(dni);
 		
-		agregarFamilia( new Familia( this ) );
+		if( debeCrearFamilia )
+			setFamilia( new Familia( this ) );
 	}
 	
+	public Familia getFamilia() 
+	{
+		return familia;
+	}
+
+	private void setFamilia(Familia familia) 
+	{				
+		this.familia = familia;
+		
+		try 
+		{
+			if( this.getPadre() != null )			
+				this.getPadre().setFamilia( familia );
+			
+			if( this.getMadre() != null )
+			{
+				this.getMadre().getFamilia().limpiar();
+				this.getMadre().setFamilia( familia );
+			}
+		} 
+		catch (FamiliarNotFoundException e) 
+		{
+
+		}		
+	}
+	
+/*	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
@@ -248,7 +323,7 @@ public abstract class Persona
 	{
 		this.familias = familias;
 	}
-
+*/
 	public boolean soyYo( Persona unaPersona )
 	{
 		return getDni().compareTo( unaPersona.getDni() ) == 0;
@@ -268,6 +343,12 @@ public abstract class Persona
 	
 	private Persona[] agregar(Persona[] hijos, Persona persona)
 	{
+		
+		// Si ya existe en la lista, no redimensiono		
+		if( persona.existePersonaEn( hijos ) )
+			return hijos;
+			
+		//Agrego a la lista el hijo nuevo
 		Persona[] nuevosHijos = new Persona[ hijos.length + 1 ];
 		
 		//Copio los hijos
@@ -372,13 +453,13 @@ public abstract class Persona
 		for( int posicion = 0; posicion < origen.length; posicion ++ )
 			destino[posicion] = origen[posicion];		
 	}
-	
+/*	
 	private void copiar(Familia[] origen, Familia[] destino)
 	{
 		for( int posicion = 0; posicion < origen.length; posicion ++ )
 			destino[posicion] = origen[posicion];		
 	}
-
+*/
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
@@ -506,18 +587,8 @@ public abstract class Persona
 	}
 
 	private boolean soyFamiliarDe(Persona persona) 
-	{
-		
-		//TODO determinar como una persona esta o no en una misma familia que otra
-		//TODO generar una clase que englobe a todas las personas de una misma familia
-		//TODO una persona puede estar en mas de una familia
-		
-		for( Familia familia : this.getFamilias() )
-			if( familia.existeFamiliaEn( persona.getFamilias() ) )
-				return true;
-				
-		//Siempre puedo emparejar
-		return false;		
+	{		
+		return this.existePersonaEn( persona.getFamilia().getFamiliares() );		
 	}
 
 	private static void emparejar(Persona persona, Persona pareja) throws ParejaInvalidaException
