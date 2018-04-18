@@ -550,14 +550,38 @@ public abstract class Persona
 	public Persona[] getSuegras()
 	{
 		return agregarMadres( this.getPareja() );
+	}	
+	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
+	public Persona[] getCuniados()
+	{
+		return agregarHermanos( this.getPareja() );
+	}
+	
+	
+	public Persona[] getCuniadas()
+	{
+		return agregarHermanas( this.getPareja() );
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
+	private Persona[] agregarHermanas(Persona persona )
+	{
+		return agregarHermanas( new Persona[] { persona } );
+	}
+		
 	private Persona[] agregarHermanas(Persona[] parientes )
 	{
 		return new PersonaAgregarHermanas().agregarParientes( parientes, new Persona[0]);
+	}
+	
+	private Persona[] agregarHermanos(Persona persona )
+	{
+		return agregarHermanos( new Persona[] { persona } );
 	}
 	
 	private Persona[] agregarHermanos(Persona[] parientes )
