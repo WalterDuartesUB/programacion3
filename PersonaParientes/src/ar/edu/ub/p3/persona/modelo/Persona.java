@@ -372,7 +372,25 @@ public abstract class Persona
 
 	private boolean validarPareja(Persona pareja)
 	{		
-		return pareja != null && !this.soyYo( pareja ) && !this.soyFamiliarDe( pareja );
+		return pareja != null && !this.soyYo( pareja ) && ( this.tenemosHijosEnComun( pareja ) || !this.soyFamiliarDe( pareja ) );
+	}
+
+	private boolean tenemosHijosEnComun(Persona persona) 
+	{
+		//Me fijo si la persona es padre o madre de alguno de mis hijos
+		Persona[] hijos = agregar( this.getHijos(), this.getHijas() );
+		
+		try 
+		{		
+			for( Persona hijo : hijos )
+				if( hijo.getMadre() == persona || hijo.getPadre() == persona )
+					return true;		
+		} 
+		catch (FamiliarNotFoundException e) 
+		{
+		}
+		
+		return false;
 	}
 
 	private boolean soyFamiliarDe(Persona persona) 
@@ -394,6 +412,15 @@ public abstract class Persona
 		if( !persona.validarPareja( pareja ) )
 			throw new ParejaInvalidaException();
 		
+		//Quito la pareja anterior de mi
+		if( persona.getPareja() != null )
+			persona.getPareja().pareja = null;
+		
+		//Quito la pareja anterior de mi pareja
+		if( pareja.getPareja() != null )
+			pareja.getPareja().pareja = null;
+		
+		//Me uno a mi pareja
 		persona.pareja = pareja;
 		pareja.pareja = persona;		
 	}
