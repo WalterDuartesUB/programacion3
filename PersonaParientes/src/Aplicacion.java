@@ -18,6 +18,9 @@ public class Aplicacion
 		Persona abuelo2 = new Hombre( "abuelo2", "2a1");
 		Persona abuela2 = new Mujer( "abuela2", "2a2");
 		
+		Persona tio = new Hombre( abuelo, abuela, "tio", "t1");
+		Persona tio2 = new Hombre( abuelo, abuela, "tio2", "t12");
+		Persona tia = new Mujer( abuelo, abuela, "tia2", "t123");
 		Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
 		Persona madre = new Mujer( abuelo2, abuela2, "madre", "m1");
 		

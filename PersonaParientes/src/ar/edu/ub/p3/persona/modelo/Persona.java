@@ -395,7 +395,8 @@ public abstract class Persona
 		
 		try
 		{
-			hermanos =  agregarHijos( agregarParejas( getMadre() ), agregarHijos( agregarParejas( getPadre() ) ) );			
+//			hermanos =  agregarHijos( agregarParejas( getMadre() ), agregarHijos( agregarParejas( getPadre() ) ) );			
+			hermanos =  agregarHijos( agregar( getPadre(), getMadre() ) );			
 		}
 		catch (FamiliarNotFoundException e)
 		{
@@ -411,7 +412,8 @@ public abstract class Persona
 		
 		try
 		{
-			hermanas =  agregarHijas( agregarParejas( getMadre() ), agregarHijas( agregarParejas( getPadre() ) ) );
+			//hermanas =  agregarHijas( agregarParejas( getMadre() ), agregarHijas( agregarParejas( getPadre() ) ) );
+			hermanas =  agregarHijas( agregar( getPadre(), getMadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
 		{
@@ -426,12 +428,14 @@ public abstract class Persona
 	
 	public Persona[] getSobrinos()
 	{
-		return agregarHijos( agregarParejas( getHermanas() ), agregarHijos( agregarParejas( getHermanos() ) ) );
+//		return agregarHijos( agregarParejas( getHermanas() ), agregarHijos( agregarParejas( getHermanos() ) ) );
+		return agregarHijos( agregar( getHermanas(), getHermanos() ) );
 	}
 	
 	public Persona[] getSobrinas()
 	{
-		return agregarHijas( agregarParejas( getHermanas() ), agregarHijas( agregarParejas( getHermanos() ) ) );
+//		return agregarHijas( agregarParejas( getHermanas() ), agregarHijas( agregarParejas( getHermanos() ) ) );
+		return agregarHijas( agregar( getHermanas(), getHermanos() ) );
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -443,7 +447,8 @@ public abstract class Persona
 		
 		try
 		{
-			tios =  agregar( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ), obtenerParejas( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ) ) );
+//			tios =  agregar( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ), obtenerParejas( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ) ) );
+			tios = agregarHermanos( agregar( getMadre(), getPadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
 		{
@@ -459,7 +464,8 @@ public abstract class Persona
 		
 		try
 		{
-			tias =  agregar( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ), obtenerParejas( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ) ) );
+//			tias =  agregar( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ), obtenerParejas( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ) ) );
+			tias = agregarHermanas( agregar( getMadre(), getPadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
 		{
@@ -471,13 +477,15 @@ public abstract class Persona
 	
 	public Persona[] getPrimos()
 	{
-		return agregarHijos( agregarParejas( getTias() ), agregarHijos( agregarParejas( getTios() ) ) );
+//		return agregarHijos( agregarParejas( getTias() ), agregarHijos( agregarParejas( getTios() ) ) );
+		return agregarHijos( agregar( getTias(), getTios() ) );
 	}
 	
 	
 	public Persona[] getPrimas()
 	{
-		return agregarHijas( agregarParejas( getTias() ), agregarHijas( agregarParejas( getTios() ) ) );
+//		return agregarHijas( agregarParejas( getTias() ), agregarHijas( agregarParejas( getTios() ) ) );
+		return agregarHijas( agregar( getTias(), getTios() ) );
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -514,7 +522,18 @@ public abstract class Persona
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
-
+	
+	private Persona[] agregarHermanas(Persona[] parientes )
+	{
+		return new PersonaAgregarHermanas().agregarParientes( parientes, new Persona[0]);
+	}
+	
+	private Persona[] agregarHermanos(Persona[] parientes )
+	{
+		return new PersonaAgregarHermanos().agregarParientes( parientes, new Persona[0]);
+	}
+	
+/*
 	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
 		return new PersonaAgregarHermanas().agregarParientes(parientesOrigen, parientesExistentes);
@@ -544,10 +563,10 @@ public abstract class Persona
 	{
 		return agregarHermanos( new Persona[] { persona }, new Persona[0]);
 	}	
-
+*/
 	///////////////////////////////////////////////////////////////////////////
 	//
-	
+/*	
 	private Persona[] agregarParejas(Persona[] parientes)
 	{
 		Persona[] parejas = agregar( parientes, new Persona[0] );
@@ -574,6 +593,7 @@ public abstract class Persona
 		
 		return parejas;
 	}
+*/
 
 	protected void agregarHijo(Hombre hombre) {
 		setHijos( agregar( getHijos(), hombre ) );		
