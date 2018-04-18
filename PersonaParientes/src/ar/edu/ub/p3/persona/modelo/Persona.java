@@ -357,6 +357,14 @@ public abstract class Persona
 		return pareja;
 	}
 	
+	/**
+	 * Empareja un Persona con otra Persona
+	 * @param pareja un Persona a emparejar
+	 * @throws ParejaInvalidaException cuando pareja es null 
+	 * @throws ParejaInvalidaException cuando soyYo(pareja) es true 
+	 * @throws ParejaInvalidaException cuando soyFamiliarDe(pareja) es true 
+	 */
+	
 	public void setPareja(Persona pareja) throws ParejaInvalidaException
 	{		
 		Persona.emparejar( this, pareja );
@@ -401,7 +409,7 @@ public abstract class Persona
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
-	
+
 	public Persona[] getHermanos()
 	{
 		Persona[] 	hermanos = null;
