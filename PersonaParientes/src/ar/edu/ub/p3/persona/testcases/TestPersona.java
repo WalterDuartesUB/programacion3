@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
+import ar.edu.ub.p3.persona.excepciones.ParejaInvalidaException;
 import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 import ar.edu.ub.p3.persona.modelo.Hombre;
 import ar.edu.ub.p3.persona.modelo.Mujer;
@@ -779,22 +780,115 @@ public class TestPersona extends TestCase
 		assertTrue( false );
 	}
 	
-	public void testPersonaObtenerSuegros()
+	public void testPersonaObtenerSuegros() 
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona suegro = new Hombre( "Suegro", "s1" );
+		Persona suegra = new Mujer( "Suegra", "s2" );
+		
+		Persona persona = new Hombre( "Persona", "p1" );
+		try 
+		{
+			Persona pareja = new Mujer( suegro, suegra, "Pareja", "p2" );
+		
+			persona.setPareja( pareja );
+			
+			assertEquals( persona, pareja.getPareja() );
+			assertEquals( pareja, persona.getPareja() );
+			
+			assertTrue( suegro.existePersonaEn( persona.getSuegros() ) );
+			assertFalse( suegra.existePersonaEn( pareja.getSuegros() ) );
+			
+			assertTrue( persona.getSuegros().length == 1 );
+			assertTrue( suegro.getSuegros().length == 0 );
+			assertTrue( suegra.getSuegros().length == 0 );
+			assertTrue( pareja.getSuegros().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException  | ParejaInvalidaException e) 
+		{		
+			assertTrue( false );
+		}
+		
 	}
 	
 	public void testPersonaObtenerSuegras()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona suegro = new Hombre( "Suegro", "s1" );
+		Persona suegra = new Mujer( "Suegra", "s2" );
+		
+		Persona persona = new Hombre( "Persona", "p1" );
+		try 
+		{
+			Persona pareja = new Mujer( suegro, suegra, "Pareja", "p2" );
+		
+			persona.setPareja( pareja );
+			
+			assertEquals( persona, pareja.getPareja() );
+			assertEquals( pareja, persona.getPareja() );
+			
+			assertFalse( suegro.existePersonaEn( persona.getSuegras() ) );
+			assertTrue( suegra.existePersonaEn( pareja.getSuegras() ) );
+			
+			assertTrue( persona.getSuegras().length == 1 );
+			assertTrue( suegro.getSuegras().length == 0 );
+			assertTrue( suegra.getSuegras().length == 0 );
+			assertTrue( pareja.getSuegras().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException  | ParejaInvalidaException e) 
+		{		
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerPareja()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona hombre = new Hombre("hombre", "h1");
+		Persona mujer = new Mujer("mujer", "M1");
+		
+		try 
+		{
+			mujer.setPareja( hombre );
+			
+			//
+			
+			assertEquals( mujer, hombre.getPareja() );
+			assertEquals( hombre, mujer.getPareja() );
+		} 
+		catch (ParejaInvalidaException e) 
+		{
+			assertTrue( false );			
+		}	
+	}
+	
+	public void testPersonaObtenerParejaSiMismo()
+	{
+		Persona mujer = new Mujer("mujer", "M1");
+		
+		try 
+		{
+			mujer.setPareja( mujer );
+			
+			assertTrue( false );
+		} 
+		catch (ParejaInvalidaException e) 
+		{
+			assertTrue( true );			
+		}	
+	}
+	
+	public void testPersonaObtenerParejaNull()
+	{
+		Persona mujer = new Mujer("mujer", "M1");
+		
+		try 
+		{
+			mujer.setPareja( null );
+			
+			assertTrue( false );
+		} 
+		catch (ParejaInvalidaException e) 
+		{
+			assertTrue( true );			
+		}	
 	}
 	
 }
