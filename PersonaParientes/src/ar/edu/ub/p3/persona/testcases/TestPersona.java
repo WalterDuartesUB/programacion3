@@ -796,7 +796,7 @@ public class TestPersona extends TestCase
 			assertEquals( pareja, persona.getPareja() );
 			
 			assertTrue( suegro.existePersonaEn( persona.getSuegros() ) );
-			assertFalse( suegra.existePersonaEn( pareja.getSuegros() ) );
+			assertFalse( suegra.existePersonaEn( persona.getSuegros() ) );
 			
 			assertTrue( persona.getSuegros().length == 1 );
 			assertTrue( suegro.getSuegros().length == 0 );
@@ -826,7 +826,7 @@ public class TestPersona extends TestCase
 			assertEquals( pareja, persona.getPareja() );
 			
 			assertFalse( suegro.existePersonaEn( persona.getSuegras() ) );
-			assertTrue( suegra.existePersonaEn( pareja.getSuegras() ) );
+			assertTrue( suegra.existePersonaEn( persona.getSuegras() ) );
 			
 			assertTrue( persona.getSuegras().length == 1 );
 			assertTrue( suegro.getSuegras().length == 0 );
