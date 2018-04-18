@@ -491,14 +491,116 @@ public class TestPersona extends TestCase
 		
 	public void testPersonaObtenerNietos()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona abuelo = new Hombre( "abuelo", "a1");
+		Persona abuela = new Mujer( "abuela", "a2");		
+		Persona otroAbuelo = new Hombre( "otro abuelo", "oa1");
+		Persona otraAbuela = new Mujer( "otra abuela", "oa2");
+		
+		try 
+		{
+			Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
+			Persona madre = new Mujer( otroAbuelo, otraAbuela, "madre", "m1");
+			
+			Persona hijo = new Hombre( padre, madre, "nieto 1", "n1");
+			Persona hija = new Mujer( padre, madre, "nieta 1", "n2");
+			Persona hijo3 = new Hombre( padre, madre, "nieto 2", "n3");
+			
+			//
+			
+			assertTrue( hijo.existePersonaEn( abuelo.getNietos() ) );
+			assertTrue( hijo3.existePersonaEn( abuelo.getNietos() ) );
+			assertFalse( hija.existePersonaEn( abuelo.getNietos() ) );
+			
+			//
+			
+			assertTrue( hijo.existePersonaEn( abuela.getNietos() ) );
+			assertTrue( hijo3.existePersonaEn( abuela.getNietos() ) );
+			assertFalse( hija.existePersonaEn( abuela.getNietos() ) );
+			
+			//
+			
+			assertTrue( hijo.existePersonaEn( otroAbuelo.getNietos() ) );
+			assertTrue( hijo3.existePersonaEn( otroAbuelo.getNietos() ) );
+			assertFalse( hija.existePersonaEn( otroAbuelo.getNietos() ) );
+			
+			//
+			
+			assertTrue( hijo.existePersonaEn( otraAbuela.getNietos() ) );
+			assertTrue( hijo3.existePersonaEn( otraAbuela.getNietos() ) );
+			assertFalse( hija.existePersonaEn( otraAbuela.getNietos() ) );
+			
+			//
+			
+			assertTrue(  padre.getNietos().length == 0 );
+			assertTrue(  madre.getNietos().length == 0 );
+			
+			assertTrue(  hijo.getNietos().length == 0 );
+			assertTrue(  hija.getNietos().length == 0 );
+			assertTrue(  hijo3.getNietos().length == 0 );
+
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException e) 
+		{
+			assertTrue( false );
+		}
+
 	}
 	
 	public void testPersonaObtenerNietas()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona abuelo = new Hombre( "abuelo", "a1");
+		Persona abuela = new Mujer( "abuela", "a2");
+		
+		Persona otroAbuelo = new Hombre( "otro abuelo", "oa1");
+		Persona otraAbuela = new Mujer( "otra abuela", "oa2");
+		
+		try 
+		{
+			Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
+			Persona madre = new Mujer( otroAbuelo, otraAbuela, "madre", "m1");
+			
+			Persona hijo = new Hombre( padre, madre, "nieto 1", "n1");
+			Persona hija = new Mujer( padre, madre, "nieta 1", "n2");
+			Persona hijo3 = new Hombre( padre, madre, "nieto 2", "n3");
+			
+			//
+			
+			assertFalse( hijo.existePersonaEn( abuelo.getNietas() ) );
+			assertFalse( hijo3.existePersonaEn( abuelo.getNietas() ) );
+			assertTrue( hija.existePersonaEn( abuelo.getNietas() ) );
+			
+			//
+			
+			assertFalse( hijo.existePersonaEn( abuela.getNietas() ) );
+			assertFalse( hijo3.existePersonaEn( abuela.getNietas() ) );
+			assertTrue( hija.existePersonaEn( abuela.getNietas() ) );
+			
+			//
+			
+			assertFalse( hijo.existePersonaEn( otroAbuelo.getNietas() ) );
+			assertFalse( hijo3.existePersonaEn( otroAbuelo.getNietas() ) );
+			assertTrue( hija.existePersonaEn( otroAbuelo.getNietas() ) );
+			
+			//
+			
+			assertFalse( hijo.existePersonaEn( otraAbuela.getNietas() ) );
+			assertFalse( hijo3.existePersonaEn( otraAbuela.getNietas() ) );
+			assertTrue( hija.existePersonaEn( otraAbuela.getNietas() ) );
+			
+			//
+			
+			assertTrue(  padre.getNietos().length == 0 );
+			assertTrue(  madre.getNietos().length == 0 );
+			
+			assertTrue(  hijo.getNietos().length == 0 );
+			assertTrue(  hija.getNietos().length == 0 );
+			assertTrue(  hijo3.getNietos().length == 0 );		
+			
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException e) 
+		{
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerCuniados()

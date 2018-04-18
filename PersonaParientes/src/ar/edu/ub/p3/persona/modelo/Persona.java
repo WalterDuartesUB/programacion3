@@ -16,8 +16,6 @@ public abstract class Persona
 		
 		public Persona[] agregarParientes( Persona[] parientesOrigen, Persona[] parientesExistentes )
 		{
-//			parientesExistentes = parientesExistentes.clone();
-			
 			for( Persona pariente : parientesOrigen )
 				parientesExistentes = agregar( this.getParientes( pariente ), parientesExistentes);
 			
@@ -453,6 +451,17 @@ public abstract class Persona
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
+	//	
+	
+	public Persona[] getNietos()
+	{
+		return agregarHijos( agregar( this.getHijas(), this.getHijos() ) );
+	}
+	
+	public Persona[] getNietas() {
+		return agregarHijas( agregar( this.getHijas(), this.getHijos() ) );
+	}	
+	///////////////////////////////////////////////////////////////////////////
 	//
 
 	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesExistentes)
@@ -522,30 +531,7 @@ public abstract class Persona
 	protected void agregarHijo(Mujer hombre) {
 		setHijas( agregar( getHijas(), hombre ) );		
 	}
-	
-	///////////////////////////////////////////////////////////////////////////
-	//	
-/*	
-	private Persona[] agregarHijos(Persona persona, Persona[] parientesDestino)
-	{
-		return agregarHijos( new Persona[] { persona }, parientesDestino );
-	}
-	
-	private Persona[] agregarHijos(Persona persona)
-	{
-		return agregarHijos( new Persona[] { persona } );
-	}
-	
-	private Persona[] agregarHijas(Persona persona, Persona[] parientesDestino)
-	{
-		return agregarHijas( new Persona[] { persona }, parientesDestino );
-	}
-	
-	private Persona[] agregarHijas(Persona persona)
-	{ 
-		return agregarHijas( new Persona[] { persona } );
-	}
-*/	
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	

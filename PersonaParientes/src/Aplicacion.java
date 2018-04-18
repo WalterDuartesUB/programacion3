@@ -1,68 +1,32 @@
 import java.util.Arrays;
 
+import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
+import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
+import ar.edu.ub.p3.persona.modelo.Hombre;
+import ar.edu.ub.p3.persona.modelo.Mujer;
 import ar.edu.ub.p3.persona.modelo.Persona;
 
 public class Aplicacion
 {
 
-	public static void main(String[] args) throws FamiliarNotFoundException
+	public static void main(String[] args) throws FamiliarNotFoundException, PersonaAtributoInvalidoException, FamiliarInvalidoException
 	{
-		/*
-		Persona padre = new Persona( "Padre", "123", PersonaSexo.MASCULINO );
-		Persona madre = new Persona( "Madre", "321", PersonaSexo.FEMENINO ); 
+		Persona abuelo = new Hombre( "abuelo", "a1");
+		Persona abuela = new Mujer( "abuela", "a2");
 		
-//		Persona padreNuera = new Persona( "Padre N", "N 123", PersonaSexo.MASCULINO );
-//		Persona madreNuera = new Persona( "Madre N", "N 321", PersonaSexo.FEMENINO );		
-
-		Persona hijo = new Persona( padre, madre, "Hijo", "456", PersonaSexo.MASCULINO );
-		Persona hijo2 = new Persona( padre, madre, "Hijo2", "44456", PersonaSexo.MASCULINO );
-		Persona hija = new Persona( padre, madre, "Hija", "3456", PersonaSexo.FEMENINO );
+		Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
+		Persona madre = new Mujer( "madre", "m1");
 		
-//		Persona nuera = new Persona( padreNuera, madreNuera, "Nuera", "14545321", PersonaSexo.FEMENINO );
-		Persona nuera = new Persona( "Nuera", "14545321", PersonaSexo.FEMENINO );
-		Persona nieto = new Persona( hijo, nuera, "Nieto", "1111456", PersonaSexo.MASCULINO );
+		Persona hijo = new Hombre( padre, madre, "nieto 1", "n1");
+		Persona hijo2 = new Mujer( padre, madre, "nieta 1", "n2");
+		Persona hijo3 = new Hombre( padre, madre, "nieto 2", "n3");
 		
-		System.out.println( hijo );
-		System.out.println( hijo.getPadre() );
-		System.out.println( hijo.getMadre() );
+		System.out.println( Arrays.toString( abuelo.getNietos()) );
+		System.out.println( Arrays.toString( abuela.getNietos()) );
 		
-		System.out.println( Arrays.toString( hijo.getPadre().getHijos() ) );
-		System.out.println( Arrays.toString( hijo.getPadre().getHijas() ) );
-		
-		System.out.println( Arrays.toString( hijo.getMadre().getHijos() ) );
-		System.out.println( Arrays.toString( hijo.getMadre().getHijas() ) );
-		
-		System.out.println( hijo.soyYo( hijo ) );
-		System.out.println( hijo.soyYo( hijo2 ) );
-		System.out.println( hijo.soyYo( padre ) );
-		System.out.println( hijo.soyYo( madre ) );
-		
-		///////////////////////////////////////////////////////////////////////
-		//
-		
-		System.out.println("Pruebas de hermanos");
-		
-		System.out.println( Arrays.toString( hijo.getHermanos() ) );
-		System.out.println( Arrays.toString( hijo.getHermanas() ) );
-
-		
-		System.out.println( Arrays.toString( hijo2.getHermanos() ) );
-		System.out.println( Arrays.toString( hijo2.getHermanas() ) );
-		
-		
-		System.out.println( Arrays.toString( hija.getHermanos() ) );
-		System.out.println( Arrays.toString( hija.getHermanas() ) );
-		
-		///////////////////////////////////////////////////////////////////////
-		//
-		
-		System.out.println("Pruebas de tios");		
-		
-		System.out.println( Arrays.toString( nieto.getTios() ) );
-		System.out.println( Arrays.toString( nieto.getTias() ) );
-		
-		*/
+		System.out.println( Arrays.toString( padre.getNietos()) );
+		System.out.println( Arrays.toString( madre.getNietos()) );
 	}
 
 }
