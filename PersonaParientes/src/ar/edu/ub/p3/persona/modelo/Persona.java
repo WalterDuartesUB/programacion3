@@ -377,12 +377,13 @@ public abstract class Persona
 
 	private boolean soyFamiliarDe(Persona persona) 
 	{
+		
+		//TODO determinar como una persona esta o no en una misma familia que otra
+		//TODO generar una clase que englobe a todas las personas de una misma familia
+		//TODO una persona puede estar en mas de una familia
+		
 		//Siempre puedo emparejar
-		return false;
-		
-//		Persona[] parientes = new Persona[0];				
-//		return this.existePersonaEn(parientes);
-		
+		return false;		
 	}
 
 	private static void emparejar(Persona persona, Persona pareja) throws ParejaInvalidaException
