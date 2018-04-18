@@ -1,5 +1,7 @@
 package ar.edu.ub.p3.persona.modelo;
 
+import java.util.Arrays;
+
 import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
 import ar.edu.ub.p3.persona.excepciones.ParejaInvalidaException;
@@ -12,6 +14,11 @@ public abstract class Persona
 	//
 	
 	abstract class PersonaAgregar{
+		public PersonaAgregar()
+		{
+			
+		}
+		
 		public abstract Persona[] getParientes(Persona persona);
 		
 		public Persona[] agregarParientes( Persona[] parientesOrigen, Persona[] parientesExistentes )
@@ -27,7 +34,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarHijos extends PersonaAgregar{
+	final class PersonaAgregarHijos extends PersonaAgregar{
 
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -36,7 +43,7 @@ public abstract class Persona
 		
 	}
 	
-	class PersonaAgregarHijas extends PersonaAgregar{
+	final class PersonaAgregarHijas extends PersonaAgregar{
 
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -48,7 +55,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarHermanos extends PersonaAgregar{
+	final class PersonaAgregarHermanos extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -57,7 +64,7 @@ public abstract class Persona
 		
 	}
 	
-	class PersonaAgregarHermanas extends PersonaAgregar{
+	final class PersonaAgregarHermanas extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -69,7 +76,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarPadres extends PersonaAgregar{
+	final class PersonaAgregarPadres extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -86,7 +93,7 @@ public abstract class Persona
 		
 	}	
 	
-	class PersonaAgregarMadres extends PersonaAgregar{
+	final class PersonaAgregarMadres extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -101,7 +108,50 @@ public abstract class Persona
 			return new Persona[0];
 		}
 		
-	}	
+	}
+	
+	/////////////////////////////////////////////////////////////////////////
+	//
+	
+	final class Familia
+	{
+		private Persona[] familiares = new Persona[0];
+		
+		public Familia( Persona persona )
+		{
+			agregarFamiliar( persona );
+		}
+
+		public void agregarFamiliar(Persona persona) 
+		{
+			setFamiliares( agregar( new Persona[] { persona } , getFamiliares()) );			
+		}
+
+		public boolean existeFamiliaEn(Familia[] familias) {
+			for( Familia flia : familias )
+				if( soyYo( flia ) )
+					return true;
+			return false;
+		}
+
+		private boolean soyYo(Familia flia) {
+			return this == flia;
+		}
+
+		private Persona[] getFamiliares() {
+			return familiares;
+		}
+
+		private void setFamiliares(Persona[] familiares) {
+			this.familiares = familiares;
+		}
+		
+		@Override
+		public String toString() 
+		{
+			return Arrays.toString( this.getFamiliares() );
+		}
+	}
 	
 	/////////////////////////////////////////////////////////////////////////
 	//
@@ -109,6 +159,8 @@ public abstract class Persona
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
+	
+	private Familia[]   familias = new Familia[0];
 	
 	private Persona     padre = null;
 	private Persona     madre = null;
@@ -129,6 +181,16 @@ public abstract class Persona
 		setPadre(padre);
 		setMadre(madre);
 		
+		//Reorganizo las familias		
+		agregarFamilias( padre.getFamilias() );
+		agregarFamilias( madre.getFamilias() );
+		
+		padre.agregarFamilias( this.getFamilias() );
+		madre.agregarFamilias( this.getFamilias() );
+		
+		padre.agregarFamilias( madre.getFamilias() );
+		madre.agregarFamilias( padre.getFamilias() );
+	
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -138,11 +200,55 @@ public abstract class Persona
 	{
 		setNombre(nombre);
 		setDni(dni);
+		
+		agregarFamilia( new Familia( this ) );
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
+	private void agregarFamilia(Familia familia) 
+	{
+		agregarFamilias( new Familia[] { familia } );
+	}
+
+	private void agregarFamilias(Familia[] familias) 
+	{
+		Familia[] nuevasFamilias = this.getFamilias();
+		
+		for( Familia flia : familias )
+			if( !flia.existeFamiliaEn( nuevasFamilias ) )
+			{
+				flia.agregarFamiliar( this );
+				nuevasFamilias = agregar( nuevasFamilias, flia );
+			}
+		
+		setFamilias( nuevasFamilias );
+	}	
+
+	private Familia[] agregar(Familia[] hijos, Familia persona)
+	{
+		Familia[] nuevosHijos = new Familia[ hijos.length + 1 ];
+		
+		//Copio los hijos
+		copiar( hijos, nuevosHijos );
+		
+		//Agrego la persona al final
+		nuevosHijos[ nuevosHijos.length - 1 ] = persona;
+				
+		return nuevosHijos;
+	}
+	
+	private Familia[] getFamilias() 
+	{
+		return familias;
+	}
+
+	private void setFamilias(Familia[] familias) 
+	{
+		this.familias = familias;
+	}
+
 	public boolean soyYo( Persona unaPersona )
 	{
 		return getDni().compareTo( unaPersona.getDni() ) == 0;
@@ -262,6 +368,12 @@ public abstract class Persona
 	//
 	
 	private void copiar(Persona[] origen, Persona[] destino)
+	{
+		for( int posicion = 0; posicion < origen.length; posicion ++ )
+			destino[posicion] = origen[posicion];		
+	}
+	
+	private void copiar(Familia[] origen, Familia[] destino)
 	{
 		for( int posicion = 0; posicion < origen.length; posicion ++ )
 			destino[posicion] = origen[posicion];		
@@ -400,6 +512,10 @@ public abstract class Persona
 		//TODO generar una clase que englobe a todas las personas de una misma familia
 		//TODO una persona puede estar en mas de una familia
 		
+		for( Familia familia : this.getFamilias() )
+			if( familia.existeFamiliaEn( persona.getFamilias() ) )
+				return true;
+				
 		//Siempre puedo emparejar
 		return false;		
 	}
