@@ -467,14 +467,83 @@ public class TestPersona extends TestCase
 
 	public void testPersonaObtenerSobrinos()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona abuelo = new Hombre( "abuelo", "a1");
+		Persona abuela = new Mujer( "abuela", "a2");		
+
+		
+		try 
+		{
+			Persona tio = new Hombre( abuelo, abuela, "Tio", "pe1");
+			Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
+			Persona madre = new Mujer( "madre", "m1");
+			
+			Persona sobrino = new Hombre( padre, madre, "nieto 1", "n1");
+			Persona sobrina = new Mujer( padre, madre, "nieta 1", "n2");
+			Persona sobrino3 = new Hombre( padre, madre, "nieto 2", "n3");
+
+			//
+			
+			assertTrue(sobrino.existePersonaEn( tio.getSobrinos( ) ) );
+			assertTrue(sobrino3.existePersonaEn( tio.getSobrinos( ) ) );
+			assertFalse(sobrina.existePersonaEn( tio.getSobrinos( ) ) );
+			
+			//
+			
+			assertTrue( abuelo.getSobrinos().length == 0 );
+			assertTrue( abuela.getSobrinos().length == 0 );
+			
+			assertTrue( padre.getSobrinos().length == 0 );
+			assertTrue( madre.getSobrinos().length == 0 );
+			
+			assertTrue( sobrino.getSobrinos().length == 0 );
+			assertTrue( sobrina.getSobrinos().length == 0 );
+			assertTrue( sobrino3.getSobrinos().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException e) 
+		{
+			assertTrue( false );
+		}
+
 	}
 	
 	public void testPersonaObtenerSobrinas()
 	{
-		//TODO: falta implementar el caso de prueba
-		assertTrue( false );
+		Persona abuelo = new Hombre( "abuelo", "a1");
+		Persona abuela = new Mujer( "abuela", "a2");		
+
+		
+		try 
+		{
+			Persona tio = new Hombre( abuelo, abuela, "Tio", "pe1");
+			Persona padre = new Hombre( abuelo, abuela, "padre", "p1");
+			Persona madre = new Mujer( "madre", "m1");
+			
+			Persona sobrino = new Hombre( padre, madre, "nieto 1", "n1");
+			Persona sobrina = new Mujer( padre, madre, "nieta 1", "n2");
+			Persona sobrino3 = new Hombre( padre, madre, "nieto 2", "n3");
+
+			//
+			
+			assertFalse(sobrino.existePersonaEn( tio.getSobrinas( ) ) );
+			assertFalse(sobrino3.existePersonaEn( tio.getSobrinas( ) ) );
+			assertTrue(sobrina.existePersonaEn( tio.getSobrinas( ) ) );
+			
+			//
+			
+			assertTrue( abuelo.getSobrinas().length == 0 );
+			assertTrue( abuela.getSobrinas().length == 0 );
+			
+			assertTrue( padre.getSobrinas().length == 0 );
+			assertTrue( madre.getSobrinas().length == 0 );
+			
+			assertTrue( sobrino.getSobrinas().length == 0 );
+			assertTrue( sobrina.getSobrinas().length == 0 );
+			assertTrue( sobrino3.getSobrinas().length == 0 );
+		} 
+		catch (PersonaAtributoInvalidoException | FamiliarInvalidoException e) 
+		{
+			assertTrue( false );
+		}
 	}
 	
 	public void testPersonaObtenerAbuelos()
