@@ -1,5 +1,7 @@
 package ar.edu.ub.p3.persona.modelo;
 
+import java.util.Arrays;
+
 import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.FamiliarNotFoundException;
 import ar.edu.ub.p3.persona.excepciones.ParejaInvalidaException;
@@ -12,12 +14,18 @@ public abstract class Persona
 	//
 	
 	abstract class PersonaAgregar{
+		public PersonaAgregar()
+		{
+			
+		}
+		
 		public abstract Persona[] getParientes(Persona persona);
 		
 		public Persona[] agregarParientes( Persona[] parientesOrigen, Persona[] parientesExistentes )
 		{
 			for( Persona pariente : parientesOrigen )
-				parientesExistentes = agregar( this.getParientes( pariente ), parientesExistentes);
+				if( pariente != null )
+					parientesExistentes = agregar( this.getParientes( pariente ), parientesExistentes);
 			
 			return parientesExistentes;
 		}
@@ -26,7 +34,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarHijos extends PersonaAgregar{
+	final class PersonaAgregarHijos extends PersonaAgregar{
 
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -35,7 +43,7 @@ public abstract class Persona
 		
 	}
 	
-	class PersonaAgregarHijas extends PersonaAgregar{
+	final class PersonaAgregarHijas extends PersonaAgregar{
 
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -47,7 +55,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarHermanos extends PersonaAgregar{
+	final class PersonaAgregarHermanos extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -56,7 +64,7 @@ public abstract class Persona
 		
 	}
 	
-	class PersonaAgregarHermanas extends PersonaAgregar{
+	final class PersonaAgregarHermanas extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -68,7 +76,7 @@ public abstract class Persona
 	/////////////////////////////////////////////////////////////////////////
 	//
 	
-	class PersonaAgregarPadres extends PersonaAgregar{
+	final class PersonaAgregarPadres extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -85,7 +93,7 @@ public abstract class Persona
 		
 	}	
 	
-	class PersonaAgregarMadres extends PersonaAgregar{
+	final class PersonaAgregarMadres extends PersonaAgregar{
 		
 		@Override
 		public Persona[] getParientes(Persona persona) {
@@ -100,7 +108,72 @@ public abstract class Persona
 			return new Persona[0];
 		}
 		
-	}	
+	}
+	
+	/////////////////////////////////////////////////////////////////////////
+	//
+	
+	final class Familia
+	{
+		private Persona[] familiares = new Persona[0];
+		
+		public Familia( Persona persona )
+		{
+			agregar( persona );
+		}
+/*
+		public void agregarFamiliar(Persona persona) 
+		{
+			setFamiliares( agregar( new Persona[] { persona } , getFamiliares()) );			
+		}
+
+		public boolean existeFamiliaEn(Familia[] familias) 
+		{
+			for( Familia flia : familias )
+				if( soyYo( flia ) )
+					return true;
+			return false;
+		}
+
+		private boolean soyYo(Familia flia) 
+		{
+			return this == flia;
+		}
+*/
+		private Persona[] getFamiliares() 
+		{
+			return familiares;
+		}
+
+		private void setFamiliares(Persona[] familiares) 
+		{
+			this.familiares = familiares;
+		}
+		
+		@Override
+		public String toString() 
+		{
+			return Arrays.toString( this.getFamiliares() );
+		}
+
+		public void agregar(Familia familia) 
+		{
+			for( Persona persona : familia.getFamiliares() )
+				agregar( persona );			
+		}
+
+		public void agregar(Persona persona) 
+		{
+			setFamiliares( persona.agregar( getFamiliares(), persona ) );
+		}
+		
+		public void limpiar() {
+			for( int posicion = 0; posicion < this.getFamiliares().length; posicion++)
+				this.getFamiliares()[posicion] = null;
+			
+			this.setFamiliares( new Persona[0]);
+		}
+	}
 	
 	/////////////////////////////////////////////////////////////////////////
 	//
@@ -108,6 +181,9 @@ public abstract class Persona
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
+	
+//	private Familia[]   familias = new Familia[0];
+	private Familia		familia = null;
 	
 	private Persona     padre = null;
 	private Persona     madre = null;
@@ -123,11 +199,37 @@ public abstract class Persona
 	
 	public Persona(Persona padre, Persona madre, String nombre, String dni ) throws FamiliarInvalidoException, PersonaAtributoInvalidoException
 	{	
-		this( nombre, dni );
-				
+		this( nombre, dni, false );
+					
+		//Mi familia es la de mi padre
+		setFamilia( padre.getFamilia() );
+		
+		//A mi familia, agrego los familiares de la familia de mi madre
+		this.getFamilia().agregar( madre.getFamilia() );
+		
+		//A mi familia, me agrego yo
+		this.getFamilia().agregar( this );
+		
+		//A mi madre, le digo que su familia es mi familia
+		madre.setFamilia( this.getFamilia() );
+		
+		///////////////////////////////////////////////////////////////////////
+		//Asigno mi padre y mi madre
+		
 		setPadre(padre);
 		setMadre(madre);
 		
+/*		
+		//Reorganizo las familias		
+		agregarFamilias( padre.getFamilias() );
+		agregarFamilias( madre.getFamilias() );
+		
+		padre.agregarFamilias( this.getFamilias() );
+		madre.agregarFamilias( this.getFamilias() );
+		
+		padre.agregarFamilias( madre.getFamilias() );
+		madre.agregarFamilias( padre.getFamilias() );
+*/	
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -135,13 +237,93 @@ public abstract class Persona
 	
 	public Persona(String nombre, String dni ) throws PersonaAtributoInvalidoException
 	{
-		setNombre(nombre);
-		setDni(dni);
+		this( nombre, dni, true );
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
+	private Persona(String nombre, String dni, boolean debeCrearFamilia ) throws PersonaAtributoInvalidoException
+	{
+		setNombre(nombre);
+		setDni(dni);
+		
+		if( debeCrearFamilia )
+			setFamilia( new Familia( this ) );
+	}
+	
+	public Familia getFamilia() 
+	{
+		return familia;
+	}
+
+	private void setFamilia(Familia familia) 
+	{				
+		this.familia = familia;
+		
+		try 
+		{
+			if( this.getPadre() != null )			
+				this.getPadre().setFamilia( familia );
+			
+			if( this.getMadre() != null )
+			{
+				this.getMadre().getFamilia().limpiar();
+				this.getMadre().setFamilia( familia );
+			}
+		} 
+		catch (FamiliarNotFoundException e) 
+		{
+
+		}		
+	}
+	
+/*	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
+	private void agregarFamilia(Familia familia) 
+	{
+		agregarFamilias( new Familia[] { familia } );
+	}
+
+	private void agregarFamilias(Familia[] familias) 
+	{
+		Familia[] nuevasFamilias = this.getFamilias();
+		
+		for( Familia flia : familias )
+			if( !flia.existeFamiliaEn( nuevasFamilias ) )
+			{
+				flia.agregarFamiliar( this );
+				nuevasFamilias = agregar( nuevasFamilias, flia );
+			}
+		
+		setFamilias( nuevasFamilias );
+	}	
+
+	private Familia[] agregar(Familia[] hijos, Familia persona)
+	{
+		Familia[] nuevosHijos = new Familia[ hijos.length + 1 ];
+		
+		//Copio los hijos
+		copiar( hijos, nuevosHijos );
+		
+		//Agrego la persona al final
+		nuevosHijos[ nuevosHijos.length - 1 ] = persona;
+				
+		return nuevosHijos;
+	}
+	
+	private Familia[] getFamilias() 
+	{
+		return familias;
+	}
+
+	private void setFamilias(Familia[] familias) 
+	{
+		this.familias = familias;
+	}
+*/
 	public boolean soyYo( Persona unaPersona )
 	{
 		return getDni().compareTo( unaPersona.getDni() ) == 0;
@@ -161,6 +343,12 @@ public abstract class Persona
 	
 	private Persona[] agregar(Persona[] hijos, Persona persona)
 	{
+		
+		// Si ya existe en la lista, no redimensiono		
+		if( persona.existePersonaEn( hijos ) )
+			return hijos;
+			
+		//Agrego a la lista el hijo nuevo
 		Persona[] nuevosHijos = new Persona[ hijos.length + 1 ];
 		
 		//Copio los hijos
@@ -213,6 +401,11 @@ public abstract class Persona
 		return agregarHijas(parientesOrigen, new Persona[0]);
 	}
 	
+	private Persona[] agregarPadres(Persona  persona )
+	{
+		return agregarPadres( new Persona[] { persona } );
+	}
+	
 	private Persona[] agregarPadres(Persona[] parientesOrigen )
 	{
 		return agregarPadres(parientesOrigen, new Persona[0]);
@@ -222,6 +415,11 @@ public abstract class Persona
 	private Persona[] agregarPadres(Persona[] parientesOrigen, Persona[] parientesExistentes)
 	{
 		return new PersonaAgregarPadres().agregarParientes( parientesOrigen, parientesExistentes );
+	}
+	
+	private Persona[] agregarMadres(Persona persona )
+	{
+		return agregarMadres( new Persona[] { persona } );
 	}
 	
 	private Persona[] agregarMadres(Persona[] parientesOrigen )
@@ -255,7 +453,13 @@ public abstract class Persona
 		for( int posicion = 0; posicion < origen.length; posicion ++ )
 			destino[posicion] = origen[posicion];		
 	}
-
+/*	
+	private void copiar(Familia[] origen, Familia[] destino)
+	{
+		for( int posicion = 0; posicion < origen.length; posicion ++ )
+			destino[posicion] = origen[posicion];		
+	}
+*/
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
@@ -346,6 +550,14 @@ public abstract class Persona
 		return pareja;
 	}
 	
+	/**
+	 * Empareja un Persona con otra Persona
+	 * @param pareja un Persona a emparejar
+	 * @throws ParejaInvalidaException cuando pareja es null 
+	 * @throws ParejaInvalidaException cuando soyYo(pareja) es true 
+	 * @throws ParejaInvalidaException cuando soyFamiliarDe(pareja) es true 
+	 */
+	
 	public void setPareja(Persona pareja) throws ParejaInvalidaException
 	{		
 		Persona.emparejar( this, pareja );
@@ -353,15 +565,30 @@ public abstract class Persona
 
 	private boolean validarPareja(Persona pareja)
 	{		
-		return pareja != null && !this.soyYo( pareja ) && !this.soyFamiliarDe( pareja );
+		return pareja != null && !this.soyYo( pareja ) && ( this.tenemosHijosEnComun( pareja ) || !this.soyFamiliarDe( pareja ) );
+	}
+
+	private boolean tenemosHijosEnComun(Persona persona) 
+	{
+		//Me fijo si la persona es padre o madre de alguno de mis hijos
+		Persona[] hijos = agregar( this.getHijos(), this.getHijas() );
+		
+		try 
+		{		
+			for( Persona hijo : hijos )
+				if( hijo.getMadre() == persona || hijo.getPadre() == persona )
+					return true;		
+		} 
+		catch (FamiliarNotFoundException e) 
+		{
+		}
+		
+		return false;
 	}
 
 	private boolean soyFamiliarDe(Persona persona) 
-	{
-	
-		Persona[] parientes = new Persona[0];		
-		
-		return this.existePersonaEn(parientes);
+	{		
+		return this.existePersonaEn( persona.getFamilia().getFamiliares() );		
 	}
 
 	private static void emparejar(Persona persona, Persona pareja) throws ParejaInvalidaException
@@ -372,6 +599,15 @@ public abstract class Persona
 		if( !persona.validarPareja( pareja ) )
 			throw new ParejaInvalidaException();
 		
+		//Quito la pareja anterior de mi
+		if( persona.getPareja() != null )
+			persona.getPareja().pareja = null;
+		
+		//Quito la pareja anterior de mi pareja
+		if( pareja.getPareja() != null )
+			pareja.getPareja().pareja = null;
+		
+		//Me uno a mi pareja
 		persona.pareja = pareja;
 		pareja.pareja = persona;		
 	}
@@ -388,14 +624,13 @@ public abstract class Persona
 	
 	///////////////////////////////////////////////////////////////////////////
 	//
-	
+
 	public Persona[] getHermanos()
 	{
 		Persona[] 	hermanos = null;
 		
 		try
-		{
-//			hermanos =  agregarHijos( agregarParejas( getMadre() ), agregarHijos( agregarParejas( getPadre() ) ) );			
+		{			
 			hermanos =  agregarHijos( agregar( getPadre(), getMadre() ) );			
 		}
 		catch (FamiliarNotFoundException e)
@@ -412,7 +647,6 @@ public abstract class Persona
 		
 		try
 		{
-			//hermanas =  agregarHijas( agregarParejas( getMadre() ), agregarHijas( agregarParejas( getPadre() ) ) );
 			hermanas =  agregarHijas( agregar( getPadre(), getMadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
@@ -428,18 +662,16 @@ public abstract class Persona
 	
 	public Persona[] getSobrinos()
 	{
-//		return agregarHijos( agregarParejas( getHermanas() ), agregarHijos( agregarParejas( getHermanos() ) ) );
 		return agregarHijos( agregar( getHermanas(), getHermanos() ) );
 	}
 	
 	public Persona[] getSobrinas()
 	{
-//		return agregarHijas( agregarParejas( getHermanas() ), agregarHijas( agregarParejas( getHermanos() ) ) );
 		return agregarHijas( agregar( getHermanas(), getHermanos() ) );
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	//
+	//,
 	
 	public Persona[] getTios()
 	{
@@ -447,7 +679,6 @@ public abstract class Persona
 		
 		try
 		{
-//			tios =  agregar( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ), obtenerParejas( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ) ) );
 			tios = agregarHermanos( agregar( getMadre(), getPadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
@@ -464,7 +695,6 @@ public abstract class Persona
 		
 		try
 		{
-//			tias =  agregar( agregarHermanas( getMadre(), agregarHermanas( getPadre() ) ), obtenerParejas( agregarHermanos( getMadre(), agregarHermanos( getPadre() ) ) ) );
 			tias = agregarHermanas( agregar( getMadre(), getPadre() ) );
 		}
 		catch (FamiliarNotFoundException e)
@@ -475,16 +705,17 @@ public abstract class Persona
 		return tias;
 	}
 	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
 	public Persona[] getPrimos()
 	{
-//		return agregarHijos( agregarParejas( getTias() ), agregarHijos( agregarParejas( getTios() ) ) );
 		return agregarHijos( agregar( getTias(), getTios() ) );
 	}
 	
 	
 	public Persona[] getPrimas()
 	{
-//		return agregarHijas( agregarParejas( getTias() ), agregarHijas( agregarParejas( getTios() ) ) );
 		return agregarHijas( agregar( getTias(), getTios() ) );
 	}
 	
@@ -499,6 +730,9 @@ public abstract class Persona
 	public Persona[] getNietas() {
 		return agregarHijas( agregar( this.getHijas(), this.getHijos() ) );
 	}	
+	
+	///////////////////////////////////////////////////////////////////////////
+	//
 	
 	public Persona[] getAbuelos()
 	{
@@ -523,9 +757,46 @@ public abstract class Persona
 	///////////////////////////////////////////////////////////////////////////
 	//
 	
+	public Persona[] getSuegros()
+	{
+		return agregarPadres( this.getPareja() );
+	}
+	
+	public Persona[] getSuegras()
+	{
+		return agregarMadres( this.getPareja() );
+	}	
+	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
+	public Persona[] getCuniados()
+	{
+		return agregarHermanos( this.getPareja() );
+	}
+	
+	
+	public Persona[] getCuniadas()
+	{
+		return agregarHermanas( this.getPareja() );
+	}
+	
+	///////////////////////////////////////////////////////////////////////////
+	//
+	
+	private Persona[] agregarHermanas(Persona persona )
+	{
+		return agregarHermanas( new Persona[] { persona } );
+	}
+		
 	private Persona[] agregarHermanas(Persona[] parientes )
 	{
 		return new PersonaAgregarHermanas().agregarParientes( parientes, new Persona[0]);
+	}
+	
+	private Persona[] agregarHermanos(Persona persona )
+	{
+		return agregarHermanos( new Persona[] { persona } );
 	}
 	
 	private Persona[] agregarHermanos(Persona[] parientes )
@@ -533,68 +804,9 @@ public abstract class Persona
 		return new PersonaAgregarHermanos().agregarParientes( parientes, new Persona[0]);
 	}
 	
-/*
-	private Persona[] agregarHermanas(Persona[] parientesOrigen, Persona[] parientesExistentes)
-	{
-		return new PersonaAgregarHermanas().agregarParientes(parientesOrigen, parientesExistentes);
-	}
-
-	private Persona[] agregarHermanas(Persona persona, Persona[] parientesExistentes)
-	{
-		return agregarHermanas( new Persona[] { persona }, parientesExistentes );
-	}
-	
-	private Persona[] agregarHermanas(Persona persona)
-	{
-		return agregarHermanas( new Persona[] { persona }, new Persona[0]);
-	}
-	
-	private Persona[] agregarHermanos(Persona[] parientesOrigen, Persona[] parientesExistentes)
-	{
-		return new PersonaAgregarHermanos().agregarParientes(parientesOrigen, parientesExistentes);
-	}
-
-	private Persona[] agregarHermanos(Persona persona, Persona[] parientesExistentes)
-	{
-		return agregarHermanos( new Persona[] { persona }, parientesExistentes );
-	}
-	
-	private Persona[] agregarHermanos(Persona persona)
-	{
-		return agregarHermanos( new Persona[] { persona }, new Persona[0]);
-	}	
-*/
 	///////////////////////////////////////////////////////////////////////////
 	//
-/*	
-	private Persona[] agregarParejas(Persona[] parientes)
-	{
-		Persona[] parejas = agregar( parientes, new Persona[0] );
-		
-		for( Persona persona : parientes )
-			if( persona.getPareja() != null )
-				parejas = agregar( parejas, persona.getPareja() );
-		
-		return parejas;
-	}
 	
-	private Persona[] agregarParejas(Persona persona)
-	{
-		return agregarParejas( new Persona[] { persona } );		
-	}	
-	
-	private Persona[] obtenerParejas(Persona[] personas)
-	{
-		Persona[] parejas = new Persona[0];
-		
-		for( Persona persona : personas )
-			if( persona.getPareja() != null )
-				parejas = agregar( parejas, persona.getPareja() );
-		
-		return parejas;
-	}
-*/
-
 	protected void agregarHijo(Hombre hombre) {
 		setHijos( agregar( getHijos(), hombre ) );		
 	}

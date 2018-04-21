@@ -3,7 +3,7 @@ package ar.edu.ub.p3.persona.modelo;
 import ar.edu.ub.p3.persona.excepciones.FamiliarInvalidoException;
 import ar.edu.ub.p3.persona.excepciones.PersonaAtributoInvalidoException;
 
-public class Hombre extends Persona {
+public final class Hombre extends Persona {
 
 	public Hombre(Persona padre, Persona madre, String nombre, String dni ) throws FamiliarInvalidoException, PersonaAtributoInvalidoException {
 		super(padre, madre, nombre, dni );
