@@ -1,5 +1,7 @@
 package ar.edu.ub.p3.producto.modelo;
 
+import ar.edu.ub.p3.producto.excepcion.PorcentajeInvalidoException;
+
 public class Producto {
 
 	private String pid;
@@ -48,12 +50,19 @@ public class Producto {
 
 	@Override
 	public String toString() {
-		return String.format("%s - %s - %.f - %d",	this.getPid(), this.getDescripcion(), this.getValor(), this.getCantidad() );
+		return String.format("%s - %s - %.2f - %d",	this.getPid(), this.getDescripcion(), this.getValor(), this.getCantidad() );
 	}
 
-	public void incrementarValor(double porcentaje) {
+	public void incrementarValor(double porcentaje) throws PorcentajeInvalidoException{
 
+		if( !this.validarPorcentajeIncremento( porcentaje ) )
+			throw new PorcentajeInvalidoException();
 		
+		this.setValor( Math.round( 100.0 * this.getValor() * ( porcentaje / 100 + 1 ) ) / 100.0 );
+	}
+
+	private boolean validarPorcentajeIncremento(double porcentaje) {
+		return porcentaje >= 0;
 	}
 	
 }
