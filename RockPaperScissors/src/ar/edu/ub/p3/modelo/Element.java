@@ -2,9 +2,9 @@ package ar.edu.ub.p3.modelo;
 
 public abstract class Element {
 
-	public static final Element ROCK = Element.createRock();
-	public static final Element PAPER = Element.createPaper();
-	public static final Element SCISSORS = Element.createScissors();
+	public static final Element ROCK = new Rock();
+	public static final Element PAPER = new Paper();
+	public static final Element SCISSORS = new Scissors();
 	
 	/**
 	 * compara dos elementos y dice quien gana
@@ -20,18 +20,5 @@ public abstract class Element {
 	
 	//Fuerzo que tengan un toString
 	public abstract String toString();
-	
-	//Constructores estaticos
-	private static Element createRock() {
-		return new Rock();
-	}
-
-	private static Element createScissors() {
-		return new Scissors();
-	}
-
-	private static Element createPaper() {
-		return new Paper();
-	}
 	
 }
