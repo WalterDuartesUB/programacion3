@@ -19,6 +19,5 @@ public abstract class Element {
 	protected abstract Element compare( Paper aPaper );
 	
 	//Fuerzo que tengan un toString
-	public abstract String toString();
-	
+	public abstract String toString();	
 }
